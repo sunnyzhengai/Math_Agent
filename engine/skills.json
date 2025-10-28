@@ -1,0 +1,52 @@
+{
+  "skills": [
+    {
+      "id": "quad.identify",
+      "name": "Identify a quadratic",
+      "prereqs": []
+    },
+    {
+      "id": "quad.factor.a1",
+      "name": "Factor trinomials (a=1)",
+      "prereqs": [
+        "quad.identify"
+      ]
+    },
+    {
+      "id": "quad.factor.an1",
+      "name": "Factor trinomials (a\u22601)",
+      "prereqs": [
+        "quad.factor.a1"
+      ]
+    },
+    {
+      "id": "quad.vertex.form",
+      "name": "Vertex form: y=a(x-h)^2+k",
+      "prereqs": [
+        "quad.identify"
+      ]
+    },
+    {
+      "id": "quad.graph.features",
+      "name": "Graph features from equation",
+      "prereqs": [
+        "quad.vertex.form",
+        "quad.factor.a1"
+      ]
+    },
+    {
+      "id": "quad.discriminant",
+      "name": "Use the discriminant",
+      "prereqs": [
+        "quad.identify"
+      ]
+    },
+    {
+      "id": "quad.formula",
+      "name": "Solve using quadratic formula",
+      "prereqs": [
+        "quad.discriminant"
+      ]
+    }
+  ]
+}

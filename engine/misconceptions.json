@@ -1,0 +1,49 @@
+{
+  "tags": [
+    {
+      "id": "vertex_sign_flip",
+      "remedy_skill": "quad.vertex.form",
+      "lesson": "In y=a(x-h)^2+k, the vertex is (h,k). If the equation is y=a(x-3)^2+1, then h=3 (not \u22123)."
+    },
+    {
+      "id": "under_root_error",
+      "remedy_skill": "quad.discriminant",
+      "lesson": "Discriminant is b^2 - 4ac. Compute inside the radical first, then simplify before dividing."
+    },
+    {
+      "id": "sign_error",
+      "remedy_skill": "quad.factor.a1",
+      "lesson": "When factoring x^2+bx+c, find numbers that multiply to c and add to b. Track signs carefully."
+    },
+    {
+      "id": "wrong_pair",
+      "remedy_skill": "quad.factor.a1",
+      "lesson": "Your factor pair multiplies to c but doesn't sum to b. Re-check the pair and signs."
+    },
+    {
+      "id": "missing_gcf",
+      "remedy_skill": "quad.factor.an1",
+      "lesson": "Always factor out the greatest common factor before trying trinomial factoring."
+    },
+    {
+      "id": "cross_product_mismatch",
+      "remedy_skill": "quad.factor.an1",
+      "lesson": "For ax^2+bx+c with a\u22601, ensure the cross products sum to b when using the AC or box method."
+    },
+    {
+      "id": "one_root_only",
+      "remedy_skill": "quad.formula",
+      "lesson": "Quadratics can have 0, 1, or 2 real roots. If two solutions exist, list both."
+    },
+    {
+      "id": "axis_wrong_direction",
+      "remedy_skill": "quad.vertex.form",
+      "lesson": "Axis of symmetry is vertical: x=h for y=a(x-h)^2+k. Direction of opening is up if a>0, down if a<0."
+    },
+    {
+      "id": "domain_time_negative",
+      "remedy_skill": "quad.formula",
+      "lesson": "In applications, time t\u22650. Ignore negative time solutions when context requires nonnegative values."
+    }
+  ]
+}

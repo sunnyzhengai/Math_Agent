@@ -1,0 +1,45 @@
+{
+  "username": "julia",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.6799999999999999,
+      "seen": 1,
+      "correct": 1,
+      "streak": 1,
+      "tag_counts": {
+        "correct": 1
+      }
+    },
+    "quad.factor.a1": {
+      "p_mastery": 0.6799999999999999,
+      "seen": 1,
+      "correct": 1,
+      "streak": 1,
+      "tag_counts": {
+        "correct": 1
+      }
+    },
+    "quad.factor.an1": {
+      "p_mastery": 0.6799999999999999,
+      "seen": 1,
+      "correct": 1,
+      "streak": 1,
+      "tag_counts": {
+        "correct": 1
+      }
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.5999999999999999,
+      "seen": 15,
+      "correct": 9,
+      "streak": 2,
+      "tag_counts": {
+        "vertex_sign_flip": 4,
+        "correct": 9,
+        "sign_error": 1,
+        "axis_wrong_direction": 1
+      }
+    }
+  },
+  "history": []
+}
