@@ -2,6 +2,7 @@
 import random
 import copy
 from fractions import Fraction
+from math import gcd
 
 def _choice_id(i):
     return ["a","b","c","d","e"][i]
@@ -56,6 +57,15 @@ def _format_poly(a, b, c, var="x"):
 def _format_factored(factors):
     """Format factored form with proper notation."""
     return factors.replace("^2", "²").replace("+ -", "- ")
+
+def _simplify_coefficients(a, b, c):
+    """Simplify quadratic coefficients by dividing by their GCD.
+    Returns (a, b, c) with GCD = 1, or original if GCD = 1."""
+    g = gcd(gcd(abs(a), abs(b)), abs(c))
+    if g > 1:
+        return a // g, b // g, c // g
+    return a, b, c
+
 
 def gen_factor_a1(difficulty="med"):
     """
@@ -179,6 +189,9 @@ def gen_discriminant(difficulty="med"):
         # bias to perfect squares
         c = (b*b)//(4*a) if random.random()<0.3 and 4*a!=0 else c
         D = b*b - 4*a*c
+    # Simplify coefficients by dividing by GCD
+    a, b, c = _simplify_coefficients(a, b, c)
+    D = b*b - 4*a*c  # recalculate D after simplification
     if D>0:
         truth = "two real solutions"
     elif D==0:
@@ -212,6 +225,10 @@ def gen_quadratic_formula(difficulty="med"):
     # For integer roots, construct (x - r1)(x - r2) = 0; then scale by a
     b = -a*(r1 + r2)
     c = a*(r1*r2)
+    # Simplify coefficients by dividing by GCD
+    a, b, c = _simplify_coefficients(a, b, c)
+    # Recalculate roots from simplified coefficients using quadratic formula
+    # (We keep the original logic but work with simplified coefficients)
     stem = f"Solve using the quadratic formula: {_format_poly(a, b, c)} = 0"
     correct = f"x = {r1}, {r2}"
     d1 = f"x = {-r1}, {-r2}"  # sign error
@@ -231,6 +248,7 @@ def gen_quadratic_formula(difficulty="med"):
         "solution": correct,
         "rationale": "Plug a,b,c into the formula, simplify the radical, and include both ± branches."
     }
+
 
 def gen_identify_quadratic(difficulty="med"):
     """
