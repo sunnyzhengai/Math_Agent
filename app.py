@@ -82,6 +82,10 @@ else:
         choice = st.radio("Choose one:", list(options.keys()), format_func=lambda k: options[k])
 
         if st.button("Submit"):
+            # DEBUG: Show what we're grading
+            st.write(f"DEBUG: You selected choice '{choice}'")
+            st.write(f"DEBUG: Item choices: {[(c['id'], c['text'][:30], c.get('tags_on_select')) for c in item['choices']]}")
+            
             result = grade(item, choice)
             # Handle both old (3-tuple) and new (4-tuple) return formats
             if len(result) == 4:
@@ -89,6 +93,7 @@ else:
             else:
                 correct, tags, chosen_text = result
                 score = 1.0 if correct else 0.0
+            st.write(f"DEBUG: Grade result - correct={correct}, tags={tags}, score={score}")
             
             update_after_answer(state, item["skill_id"], correct, tags)
             

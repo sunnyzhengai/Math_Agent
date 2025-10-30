@@ -1,15 +1,17 @@
 
 import random
+import copy
 from fractions import Fraction
 
 def _choice_id(i):
     return ["a","b","c","d","e"][i]
 
 def _shuffle_choices(choices):
-    random.shuffle(choices)
-    # DON'T reassign IDs - keep them as they were (a/b/c/d)
-    # The IDs are already correctly set before shuffle, we just shuffle the order
-    return choices
+    # Make a deep copy so we don't mutate the original
+    choices_copy = copy.deepcopy(choices)
+    random.shuffle(choices_copy)
+    # Keep original IDs - they're already correctly set (a/b/c/d)
+    return choices_copy
 
 def _format_poly(a, b, c, var="x"):
     """Format a polynomial ax^2 + bx + c with proper superscripts and clean notation."""

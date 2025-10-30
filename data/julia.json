@@ -11,12 +11,13 @@
       }
     },
     "quad.factor.a1": {
-      "p_mastery": 0.6799999999999999,
-      "seen": 1,
-      "correct": 1,
-      "streak": 1,
+      "p_mastery": 0.7599999999999998,
+      "seen": 7,
+      "correct": 5,
+      "streak": 4,
       "tag_counts": {
-        "correct": 1
+        "correct": 5,
+        "sign_error": 2
       }
     },
     "quad.factor.an1": {
@@ -29,28 +30,28 @@
       }
     },
     "quad.vertex.form": {
-      "p_mastery": 0.6799999999999998,
-      "seen": 16,
-      "correct": 10,
-      "streak": 3,
+      "p_mastery": 0.5999999999999998,
+      "seen": 20,
+      "correct": 12,
+      "streak": 0,
       "tag_counts": {
         "vertex_sign_flip": 4,
-        "correct": 10,
-        "sign_error": 1,
+        "correct": 12,
+        "sign_error": 3,
         "axis_wrong_direction": 1
       }
     },
     "quad.discriminant": {
-      "p_mastery": 0.48000000000000004,
-      "seen": 6,
-      "correct": 3,
-      "streak": 1,
+      "p_mastery": 0.72,
+      "seen": 9,
+      "correct": 6,
+      "streak": 4,
       "tag_counts": {
         "under_root_error": 3,
-        "correct": 3
+        "correct": 6
       }
     }
   },
   "history": [],
-  "questions_answered": 4
+  "questions_answered": 17
 }
