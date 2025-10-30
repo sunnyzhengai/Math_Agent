@@ -2,25 +2,6 @@
   "username": "julia",
   "skills": {
     "quad.identify": {
-      "p_mastery": 0.9199999999999998,
-      "seen": 4,
-      "correct": 4,
-      "streak": 4,
-      "tag_counts": {
-        "correct": 4
-      }
-    },
-    "quad.factor.a1": {
-      "p_mastery": 0.8399999999999997,
-      "seen": 8,
-      "correct": 6,
-      "streak": 5,
-      "tag_counts": {
-        "correct": 6,
-        "sign_error": 2
-      }
-    },
-    "quad.factor.an1": {
       "p_mastery": 0.6799999999999999,
       "seen": 1,
       "correct": 1,
@@ -28,40 +9,8 @@
       "tag_counts": {
         "correct": 1
       }
-    },
-    "quad.vertex.form": {
-      "p_mastery": 0.9199999999999996,
-      "seen": 24,
-      "correct": 16,
-      "streak": 4,
-      "tag_counts": {
-        "vertex_sign_flip": 4,
-        "correct": 16,
-        "sign_error": 3,
-        "axis_wrong_direction": 1
-      }
-    },
-    "quad.discriminant": {
-      "p_mastery": 0.9199999999999997,
-      "seen": 19,
-      "correct": 13,
-      "streak": 5,
-      "tag_counts": {
-        "under_root_error": 6,
-        "correct": 13
-      }
-    },
-    "quad.formula": {
-      "p_mastery": 0.6399999999999999,
-      "seen": 3,
-      "correct": 2,
-      "streak": 1,
-      "tag_counts": {
-        "correct": 2,
-        "sign_error": 1
-      }
     }
   },
   "history": [],
-  "questions_answered": 35
+  "questions_answered": 1
 }
