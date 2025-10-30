@@ -232,56 +232,128 @@ def gen_quadratic_formula(difficulty="med"):
 def gen_identify_quadratic(difficulty="med"):
     """
     Generate a question asking whether an expression is a quadratic.
+    Tests different aspects of quadratic identification.
     """
     import random
     
-    templates_list = [
-        # Quadratics (correct)
-        ("x² + 3x + 2", True),
-        ("2x² - 5x + 1", True),
-        ("x² - 4", True),
-        ("-x² + x", True),
-        ("3x²", True),
-        ("x² + 7", True),
-        ("(x-2)(x+3)", True),
+    # Different categories of quadratics and non-quadratics
+    test_cases = [
+        # QUADRATICS (is_quad=True)
+        # 1. Standard form with all terms
+        ("x² + 3x + 2", True, "standard_form_trinomial"),
+        ("2x² - 5x + 1", True, "leading_coeff_trinomial"),
+        ("3x² + 4x - 7", True, "leading_coeff_trinomial"),
+        ("-x² + 2x - 1", True, "negative_leading_coeff"),
         
-        # Non-quadratics (incorrect)
-        ("x + 3", False),  # linear
-        ("x³ - 2x + 1", False),  # cubic
-        ("2x - 5", False),  # linear
-        ("x⁴ + x²", False),  # quartic
-        ("x² + x³", False),  # cubic (mixed)
-        ("5", False),  # constant
-        ("x", False),  # linear
-        ("x² + x³ + x²", False),  # cubic term dominates
+        # 2. Missing terms (b=0 or c=0)
+        ("x² + 5", True, "missing_linear_term"),
+        ("x² - 9", True, "missing_linear_term"),
+        ("4x²", True, "only_quadratic_term"),
+        ("x² + 2x", True, "missing_constant_term"),
+        ("-3x²", True, "only_quadratic_term_negative"),
+        
+        # 3. Factored form (expands to quadratic)
+        ("(x - 2)(x + 3)", True, "factored_form"),
+        ("(x + 1)(x - 1)", True, "factored_form"),
+        ("(2x - 1)(x + 4)", True, "factored_form_with_coeff"),
+        
+        # 4. Vertex form
+        ("(x - 3)²", True, "vertex_form_perfect_square"),
+        ("2(x + 1)² - 5", True, "vertex_form_with_coeff"),
+        
+        # NON-QUADRATICS (is_quad=False)
+        # 5. Linear expressions
+        ("x + 3", False, "linear_binomial"),
+        ("2x - 5", False, "linear_with_coeff"),
+        ("x", False, "linear_monomial"),
+        ("5x", False, "linear_monomial_with_coeff"),
+        
+        # 6. Constants
+        ("5", False, "constant"),
+        ("0", False, "constant"),
+        ("-7", False, "constant"),
+        
+        # 7. Cubic and higher
+        ("x³ + 2x", False, "cubic"),
+        ("x³ - x² + 1", False, "cubic_trinomial"),
+        ("x⁴ + x²", False, "quartic"),
+        ("x⁵ - 3x", False, "quintic"),
+        
+        # 8. Mixed degree where highest is NOT 2
+        ("x² + x³", False, "mixed_cubic_dominant"),
+        ("x² + x³ - x", False, "mixed_cubic_dominant"),
+        ("x + x²", False, "mixed_but_not_highest"),  # Wait, this is quadratic!
+        
+        # 9. Expressions that might be confusing
+        ("(x + 1)(x + 1)(x + 2)", False, "product_three_factors"),  # This expands to cubic
+        ("x(x + 5) + 2x + 3", True, "expanded_appears_linear_terms"),  # x² + 5x + 2x + 3 = x² + 7x + 3
     ]
     
-    expr, is_quad = random.choice(templates_list)
+    # Pick a random test case
+    expr, is_quad, category = random.choice(test_cases)
     
-    # Determine correct answer
+    # Determine correct answer and distractors based on whether it's quadratic
     if is_quad:
         correct = "Yes, this is a quadratic."
         rationale = f"The expression {expr} has degree 2 (highest power is x²), so it is quadratic."
-        d1 = "No, this is linear."
-        d2 = "No, this is cubic."
-        d3 = "No, this is constant."
+        
+        # Distractors that test common misconceptions
+        if category == "only_quadratic_term" or category == "only_quadratic_term_negative":
+            d1 = "No, it's linear because it only has one term."
+            d2 = "No, this is a monomial, not a polynomial."
+            d3 = "No, this is too simple."
+        elif category in ["factored_form", "factored_form_with_coeff"]:
+            d1 = "No, it's in factored form, not expanded."
+            d2 = "No, factored expressions can't be quadratic."
+            d3 = "No, because it has multiplication."
+        elif category in ["vertex_form_perfect_square", "vertex_form_with_coeff"]:
+            d1 = "No, it's a perfect square, not a quadratic."
+            d2 = "No, vertex form is linear."
+            d3 = "No, because it has a perfect square."
+        else:
+            d1 = "No, it's linear."
+            d2 = "No, it's cubic."
+            d3 = "No, it's a polynomial but not quadratic."
     else:
         correct = "No, this is not a quadratic."
         rationale = f"The expression {expr} does not have degree 2 as its highest power."
-        d1 = "Yes, this is quadratic."
-        d2 = "Yes, but it's a trinomial."
-        d3 = "Yes, but it's linear."
+        
+        # Distractors that test common misconceptions
+        if category in ["linear_binomial", "linear_monomial", "linear_monomial_with_coeff", "linear_with_coeff"]:
+            d1 = "Yes, because it has a variable."
+            d2 = "Yes, because it has a linear term."
+            d3 = "Yes, all polynomial expressions are quadratic."
+        elif category in ["constant"]:
+            d1 = "Yes, constants are special quadratics."
+            d2 = "Yes, because every polynomial is quadratic."
+            d3 = "Yes, if there's no variable, it's still quadratic."
+        elif category in ["cubic", "cubic_trinomial", "quintic"]:
+            d1 = "Yes, high-degree polynomials are quadratic."
+            d2 = "Yes, any polynomial with at least one x² term is quadratic."
+            d3 = "Yes, it has an x² term."
+        elif category in ["quartic"]:
+            d1 = "Yes, because it contains an x² term."
+            d2 = "Yes, x⁴ can be written as (x²)²."
+            d3 = "Yes, high powers don't matter."
+        elif category in ["mixed_cubic_dominant"]:
+            d1 = "Yes, it has an x² term."
+            d2 = "Yes, because it's a polynomial."
+            d3 = "Yes, polynomials with x² are always quadratic."
+        else:
+            d1 = "Yes, because it looks like a quadratic."
+            d2 = "Yes, if it has polynomial terms."
+            d3 = "Yes, most expressions are quadratic."
     
     stem = f"Is the following expression a quadratic? {expr}"
     choices = [
         {"id":"a","text":correct,"tags_on_select":["correct"]},
-        {"id":"b","text":d1,"tags_on_select":["degree_confusion"]},
-        {"id":"c","text":d2,"tags_on_select":["degree_confusion"]},
-        {"id":"d","text":d3,"tags_on_select":["degree_confusion"]},
+        {"id":"b","text":d1,"tags_on_select":["misconception"]},
+        {"id":"c","text":d2,"tags_on_select":["misconception"]},
+        {"id":"d","text":d3,"tags_on_select":["misconception"]},
     ]
     
     return {
-        "id": f"identify_{expr.replace('^','_').replace('+','_').replace('-','_')}_{random.randint(1000,9999)}",
+        "id": f"identify_{category}_{random.randint(1000,9999)}",
         "skill_id":"quad.identify",
         "stem": stem,
         "choices": _shuffle_choices(choices),

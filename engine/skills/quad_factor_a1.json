@@ -1,0 +1,89 @@
+{
+  "id": "quad.factor.a1",
+  "name": "Factor trinomials (a = 1)",
+  "domain": "Quadratics",
+  "grade_band": "9-10",
+  "description": "Factor x^2 + bx + c into (x + p)(x + q) when integers p and q exist.",
+  "prereqs": ["quad.identify"],
+  "successors": ["quad.factor.an1", "quad.graph.features"],
+
+  "learning_objectives": [
+    {"id": "LO1", "text": "Recognize when a trinomial is factorable over integers"},
+    {"id": "LO2", "text": "Find integers p,q with p+q=b and pq=c"},
+    {"id": "LO3", "text": "Check the factorization by expanding"}
+  ],
+
+  "knowledge_requirements": [
+    {"id": "KR1", "text": "Greatest common factor (GCF) awareness"},
+    {"id": "KR2", "text": "Sum and product matching to b and c"},
+    {"id": "KR3", "text": "Sign handling for negatives"}
+  ],
+
+  "common_misconceptions": [
+    {
+      "id": "wrong_pair",
+      "pattern_hint": "Chosen p,q multiply to c but don't add to b",
+      "explain": "Both conditions must hold: p+q=b and pq=c.",
+      "remedy_skill": "quad.factor.a1"
+    },
+    {
+      "id": "sign_error",
+      "pattern_hint": "Signs of p,q incorrect",
+      "explain": "Track signs: if c>0 then p and q share the sign of b; if c<0 then p,q have opposite signs.",
+      "remedy_skill": "quad.factor.a1"
+    }
+  ],
+
+  "item_templates": [
+    {
+      "id": "T1",
+      "type": "mcq",
+      "stem_template": "Factor: x^2 + {b}x + {c}",
+      "generator_params": {
+        "ranges": {"b": [-10,10], "c": [-20,20]},
+        "constraints": ["(b,c) produce integer factorization"]
+      },
+      "answer_key": "Find integers p,q such that p+q=b and pq=c; answer (x+p)(x+q).",
+      "diagnostic_choices": [
+        {"text_template": "(x+{p})(x+{q})", "tags_on_select": ["correct"]},
+        {"text_template": "(x+{abs_p})(x+{abs_q})", "tags_on_select": ["sign_error"]},
+        {"text_template": "(x+{p_plus1})(x+{q_minus1})", "tags_on_select": ["wrong_pair"]},
+        {"text_template": "(x-{p})(x-{q})", "tags_on_select": ["sign_error"]}
+      ],
+      "rubric": {
+        "full_credit": "Correct factor pair and signs",
+        "partial_credit": []
+      }
+    }
+  ],
+
+  "assessment_blueprint": {
+    "recommended_mix": [
+      {"template_id": "T1", "count": 4, "difficulty": "easy"}
+    ],
+    "mastery_rule": {
+      "min_items": 8,
+      "min_accuracy": 0.9,
+      "no_repeated_tag_threshold": 2,
+      "streak_for_mastery": 3
+    }
+  },
+
+  "remediation": [
+    {
+      "trigger_tag": "wrong_pair",
+      "mini_lesson": "Check both conditions: sum to b AND product to c. Test with quick expand to verify.",
+      "drill_templates": [{"template_id": "T1", "count": 3, "difficulty": "easy"}]
+    },
+    {
+      "trigger_tag": "sign_error",
+      "mini_lesson": "If c<0 then signs oppose; if c>0, both p and q share the sign of b.",
+      "drill_templates": [{"template_id": "T1", "count": 3, "difficulty": "easy"}]
+    }
+  ],
+
+  "resources": [],
+  "difficulty": "easy",
+  "tags": ["algebra", "quadratics", "factoring"],
+  "telemetry_keys": ["choice_id", "time_taken_ms", "confidence_1to5", "tags_on_select"]
+}

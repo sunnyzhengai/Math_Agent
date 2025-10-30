@@ -1,0 +1,91 @@
+{
+  "id": "quad.vertex.form",
+  "name": "Vertex form: identify vertex and opening",
+  "domain": "Quadratics",
+  "grade_band": "9-10",
+  "description": "Given y = a(x - h)^2 + k, identify (h, k) and whether the parabola opens up or down.",
+  "prereqs": ["quad.identify"],
+  "successors": ["quad.graph.features"],
+
+  "learning_objectives": [
+    {"id": "LO1", "text": "Identify vertex (h, k) from vertex form"},
+    {"id": "LO2", "text": "Determine opening direction from sign of a"},
+    {"id": "LO3", "text": "State axis of symmetry x = h"}
+  ],
+
+  "knowledge_requirements": [
+    {"id": "KR1", "text": "Map y = a(x - h)^2 + k to parameters a, h, k"},
+    {"id": "KR2", "text": "Interpret sign of a"},
+    {"id": "KR3", "text": "Axis of symmetry passes through the vertex"}
+  ],
+
+  "common_misconceptions": [
+    {
+      "id": "vertex_sign_flip",
+      "pattern_hint": "Uses (-h, k) instead of (h, k)",
+      "explain": "Inside (x - h) the sign is already inverted; the vertex x-coordinate is +h.",
+      "remedy_skill": "quad.vertex.form"
+    },
+    {
+      "id": "axis_wrong_direction",
+      "pattern_hint": "Says opens up when a < 0, or down when a > 0",
+      "explain": "a > 0 opens up; a < 0 opens down.",
+      "remedy_skill": "quad.vertex.form"
+    }
+  ],
+
+  "item_templates": [
+    {
+      "id": "T1",
+      "type": "mcq",
+      "stem_template": "For y = {a}(x - ({h}))^2 + {k}, what is the vertex and opening direction?",
+      "generator_params": {
+        "ranges": {"a": [1,2,3,-1,-2], "h": [-5,5], "k": [-5,5]},
+        "constraints": ["a != 0"]
+      },
+      "answer_key": "Vertex (h, k); opens up if a>0 else down.",
+      "diagnostic_choices": [
+        {"text_template": "Vertex ({h}, {k}), opens {dir}", "tags_on_select": ["correct"]},
+        {"text_template": "Vertex ({neg_h}, {k}), opens {dir}", "tags_on_select": ["vertex_sign_flip"]},
+        {"text_template": "Vertex ({h}, {k}), opens {wrong_dir}", "tags_on_select": ["axis_wrong_direction"]},
+        {"text_template": "Vertex ({h}, {neg_k}), opens {dir}", "tags_on_select": ["sign_error"]}
+      ],
+      "rubric": {
+        "full_credit": "Vertex correct AND opening matches sign(a).",
+        "partial_credit": [
+          {"when": "Vertex correct AND opening wrong", "points": 0.5}
+        ]
+      }
+    }
+  ],
+
+  "assessment_blueprint": {
+    "recommended_mix": [
+      {"template_id": "T1", "count": 4, "difficulty": "med"}
+    ],
+    "mastery_rule": {
+      "min_items": 8,
+      "min_accuracy": 0.9,
+      "no_repeated_tag_threshold": 2,
+      "streak_for_mastery": 3
+    }
+  },
+
+  "remediation": [
+    {
+      "trigger_tag": "vertex_sign_flip",
+      "mini_lesson": "In y = a(x - h)^2 + k, the vertex x-value is h, not -h. Example: y = (x-3)^2+1 → vertex is (3,1).",
+      "drill_templates": [{"template_id": "T1", "count": 3, "difficulty": "easy"}]
+    },
+    {
+      "trigger_tag": "axis_wrong_direction",
+      "mini_lesson": "The coefficient a controls opening: a>0 up, a<0 down. Sketch two quick examples to see the U-shape.",
+      "drill_templates": [{"template_id": "T1", "count": 3, "difficulty": "easy"}]
+    }
+  ],
+
+  "resources": [],
+  "difficulty": "med",
+  "tags": ["algebra", "quadratics", "graphs"],
+  "telemetry_keys": ["choice_id", "time_taken_ms", "confidence_1to5", "tags_on_select"]
+}
