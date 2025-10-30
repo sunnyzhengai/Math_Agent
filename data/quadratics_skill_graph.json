@@ -1,0 +1,257 @@
+{
+  "domain": "Quadratics",
+  "skills": [
+    {
+      "id": "quad.convert.complete_square",
+      "name": "Complete the square",
+      "description": "Rewrite as a(x\u2013h)\u00b2 + k.",
+      "prereqs": [
+        "quad.convert.expand"
+      ],
+      "successors": [
+        "quad.convert.standard_to_vertex",
+        "quad.solve.by_completing_square"
+      ]
+    },
+    {
+      "id": "quad.convert.expand",
+      "name": "Expand to standard form",
+      "description": "Multiply to get ax\u00b2+bx+c.",
+      "prereqs": [
+        "quad.form.identify.factored"
+      ],
+      "successors": [
+        "quad.convert.complete_square"
+      ]
+    },
+    {
+      "id": "quad.convert.factor.complex",
+      "name": "Factor when a\u22601",
+      "description": "Use grouping or decomposition.",
+      "prereqs": [
+        "quad.convert.factor.simple"
+      ],
+      "successors": [
+        "quad.solve.by_factoring"
+      ]
+    },
+    {
+      "id": "quad.convert.factor.simple",
+      "name": "Factor when a=1",
+      "description": "Find integer factors of c that sum to b.",
+      "prereqs": [
+        "quad.form.identify.standard"
+      ],
+      "successors": [
+        "quad.convert.factor.complex",
+        "quad.solve.by_factoring"
+      ]
+    },
+    {
+      "id": "quad.convert.standard_to_vertex",
+      "name": "Convert standard\u2192vertex",
+      "description": "Use h = \u2013b/2a, k = c \u2013 b\u00b2/4a.",
+      "prereqs": [
+        "quad.convert.complete_square"
+      ],
+      "successors": [
+        "quad.graph.vertex",
+        "quad.model.optimize"
+      ]
+    },
+    {
+      "id": "quad.convert.vertex_to_standard",
+      "name": "Convert vertex\u2192standard",
+      "description": "Expand a(x\u2013h)\u00b2 + k to ax\u00b2+bx+c.",
+      "prereqs": [
+        "quad.form.identify.vertex"
+      ],
+      "successors": [
+        "quad.convert.complete_square"
+      ]
+    },
+    {
+      "id": "quad.form.identify.factored",
+      "name": "Identify factored form",
+      "description": "Recognize y = a(x\u2013r\u2081)(x\u2013r\u2082) and relate to roots.",
+      "prereqs": [
+        "quad.form.identify.standard"
+      ],
+      "successors": [
+        "quad.convert.expand",
+        "quad.solve.by_factoring"
+      ]
+    },
+    {
+      "id": "quad.form.identify.standard",
+      "name": "Identify standard form",
+      "description": "Recognize y = ax\u00b2 + bx + c and identify coefficients.",
+      "prereqs": [],
+      "successors": [
+        "quad.form.identify.vertex",
+        "quad.form.identify.factored"
+      ]
+    },
+    {
+      "id": "quad.form.identify.vertex",
+      "name": "Identify vertex form",
+      "description": "Recognize y = a(x\u2013h)\u00b2 + k and identify parameters.",
+      "prereqs": [
+        "quad.form.identify.standard"
+      ],
+      "successors": [
+        "quad.graph.vertex",
+        "quad.convert.vertex_to_standard"
+      ]
+    },
+    {
+      "id": "quad.graph.axis",
+      "name": "Axis of symmetry",
+      "description": "x = h.",
+      "prereqs": [
+        "quad.graph.vertex"
+      ],
+      "successors": [
+        "quad.graph.sketch"
+      ]
+    },
+    {
+      "id": "quad.graph.direction",
+      "name": "Opening direction",
+      "description": "Determine up/down from sign of a.",
+      "prereqs": [
+        "quad.form.identify.vertex"
+      ],
+      "successors": [
+        "quad.graph.sketch"
+      ]
+    },
+    {
+      "id": "quad.graph.intercepts",
+      "name": "Find intercepts",
+      "description": "Find x and y intercepts.",
+      "prereqs": [
+        "quad.convert.factor.simple"
+      ],
+      "successors": [
+        "quad.graph.sketch",
+        "quad.solve.by_factoring"
+      ]
+    },
+    {
+      "id": "quad.graph.sketch",
+      "name": "Sketch parabola",
+      "description": "Plot vertex, axis, intercepts.",
+      "prereqs": [
+        "quad.graph.vertex",
+        "quad.graph.axis",
+        "quad.graph.direction"
+      ],
+      "successors": [
+        "quad.solve.by_graphing"
+      ]
+    },
+    {
+      "id": "quad.graph.vertex",
+      "name": "Find vertex",
+      "description": "Identify (h,k) accurately.",
+      "prereqs": [
+        "quad.form.identify.vertex"
+      ],
+      "successors": [
+        "quad.graph.axis",
+        "quad.graph.direction",
+        "quad.model.optimize"
+      ]
+    },
+    {
+      "id": "quad.model.optimize",
+      "name": "Optimize with vertex",
+      "description": "Use vertex as max/min point.",
+      "prereqs": [
+        "quad.graph.vertex"
+      ],
+      "successors": [
+        "quad.model.projectile",
+        "quad.model.story"
+      ]
+    },
+    {
+      "id": "quad.model.projectile",
+      "name": "Projectile motion",
+      "description": "Model motion with quadratic.",
+      "prereqs": [
+        "quad.solve.by_formula",
+        "quad.graph.vertex"
+      ],
+      "successors": [
+        "quad.model.story"
+      ]
+    },
+    {
+      "id": "quad.model.story",
+      "name": "Word problem mastery",
+      "description": "Translate real-world situations to quadratic models.",
+      "prereqs": [
+        "quad.model.optimize",
+        "quad.model.projectile"
+      ],
+      "successors": []
+    },
+    {
+      "id": "quad.solve.by_completing_square",
+      "name": "Solve by completing the square",
+      "description": "Rewrite as (x\u2013h)\u00b2=k and solve.",
+      "prereqs": [
+        "quad.convert.complete_square"
+      ],
+      "successors": [
+        "quad.solve.discriminant"
+      ]
+    },
+    {
+      "id": "quad.solve.by_factoring",
+      "name": "Solve by factoring",
+      "description": "Set each factor=0 to find roots.",
+      "prereqs": [
+        "quad.convert.factor.simple"
+      ],
+      "successors": [
+        "quad.solve.discriminant",
+        "quad.solve.by_formula"
+      ]
+    },
+    {
+      "id": "quad.solve.by_formula",
+      "name": "Quadratic formula",
+      "description": "Compute x = (-b \u00b1 \u221a(b\u00b2\u22124ac))/2a.",
+      "prereqs": [
+        "quad.form.identify.standard"
+      ],
+      "successors": [
+        "quad.solve.discriminant",
+        "quad.model.projectile"
+      ]
+    },
+    {
+      "id": "quad.solve.by_graphing",
+      "name": "Solve by graphing",
+      "description": "Find x-intercepts from the graph.",
+      "prereqs": [
+        "quad.graph.sketch"
+      ],
+      "successors": []
+    },
+    {
+      "id": "quad.solve.discriminant",
+      "name": "Discriminant reasoning",
+      "description": "Predict number/type of roots.",
+      "prereqs": [
+        "quad.form.identify.standard"
+      ],
+      "successors": [
+        "quad.model.projectile"
+      ]
+    }
+  ]
+}
