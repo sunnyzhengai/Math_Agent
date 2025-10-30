@@ -149,7 +149,9 @@ def gen_vertex_form(difficulty="med"):
     # distractors
     d1 = f"Vertex ({-h}, {k}), opens {direction}"  # vertex_sign_flip
     d2 = f"Vertex {vertex}, opens {'down' if direction=='up' else 'up'}"  # direction wrong
-    d3 = f"Vertex ({h}, {-k}), opens {direction}"  # sign error on k
+    # d3 should always differ from correct; if k=0 use 1, else negate k
+    wrong_k = 1 if k == 0 else -k
+    d3 = f"Vertex ({h}, {wrong_k}), opens {direction}"  # sign error on k
     choices = [
         {"id":"a","text":correct,"tags_on_select":["correct"]},
         {"id":"b","text":d1,"tags_on_select":["vertex_sign_flip"]},
