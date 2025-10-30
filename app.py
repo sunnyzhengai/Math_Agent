@@ -76,6 +76,13 @@ else:
 
         if st.button("Submit"):
             result = grade(item, choice)
+            # Handle both old (3-tuple) and new (4-tuple) return formats
+            if len(result) == 4:
+                correct, tags, chosen_text, score = result
+            else:
+                correct, tags, chosen_text = result
+                score = 1.0 if correct else 0.0
+            
             update_after_answer(state, item["skill_id"], correct, tags)
             
             # Increment questions answered
