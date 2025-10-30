@@ -7,9 +7,8 @@ def _choice_id(i):
 
 def _shuffle_choices(choices):
     random.shuffle(choices)
-    # reassign ids to be a/b/c/d after shuffle
-    for i,ch in enumerate(choices):
-        ch["id"] = _choice_id(i)
+    # DON'T reassign IDs - keep them as they were (a/b/c/d)
+    # The IDs are already correctly set before shuffle, we just shuffle the order
     return choices
 
 def _format_poly(a, b, c, var="x"):

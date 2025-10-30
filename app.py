@@ -71,6 +71,13 @@ else:
     if st.session_state.current_item:
         item = st.session_state.current_item
         st.subheader(item["stem"])
+        
+        # DEBUG: Show which choice has "correct" tag
+        with st.expander("DEBUG: Show correct answer"):
+            for c in item["choices"]:
+                tags = c.get("tags_on_select", [])
+                st.write(f"Choice {c['id']}: {c['text'][:50]}... | Tags: {tags}")
+        
         options = {c["id"]: c["text"] for c in item["choices"]}
         choice = st.radio("Choose one:", list(options.keys()), format_func=lambda k: options[k])
 
