@@ -4,6 +4,7 @@ from engine import templates
 from engine.grader import grade
 from engine.state import load_user_state, save_user_state, ensure_skill, update_after_answer, mastered
 from engine.planner import next_skill, generate_item_for_skill, lesson_for_tags, SKILL_LIST
+from engine.neo4j_sync import Neo4jSync, sync_to_neo4j
 
 st.set_page_config(page_title="Quadratics MVP", page_icon="🧮", layout="centered")
 
@@ -17,6 +18,27 @@ with st.sidebar:
     if st.button("Reset Progress"):
         save_user_state(username, {"username": username, "skills": {}, "history": [], "questions_answered": 0})
         st.success("Progress reset.")
+    
+    # Show Neo4j dashboard if available
+    try:
+        sync = Neo4jSync()
+        dashboard = sync.get_dashboard(username.lower())
+        sync.close()
+        
+        if dashboard:
+            st.divider()
+            st.subheader("📊 Neo4j Dashboard")
+            
+            # Show stats
+            col1, col2, col3 = st.columns(3)
+            col1.metric("Mastered", f"{dashboard['stats']['mastered']}")
+            col2.metric("Practicing", f"{dashboard['stats']['practicing']}")
+            col3.metric("Struggling", f"{dashboard['stats']['struggling']}")
+            
+            st.metric("Average Mastery", f"{dashboard['stats']['avg_mastery']:.0%}")
+    except Exception as e:
+        # Neo4j not available - continue without it
+        pass
 
 state = load_user_state(username)
 
@@ -46,6 +68,18 @@ if "current_skill" not in st.session_state:
     st.session_state.current_skill = None
 if "feedback" not in st.session_state:
     st.session_state.feedback = None
+
+# Show Neo4j recommendation if available
+try:
+    sync = Neo4jSync()
+    recommendation = sync.get_next_skill_recommendation(username.lower())
+    sync.close()
+    
+    if recommendation:
+        st.info(f"🎯 **Next Recommended Skill:** {recommendation['skill_name']}\n\n{recommendation['rationale']}")
+except Exception as e:
+    # Neo4j not available
+    pass
 
 # Check if quiz is complete
 if questions_answered >= total_questions:
@@ -84,6 +118,33 @@ else:
             # Increment questions answered
             state["questions_answered"] = questions_answered + 1
             save_user_state(username, state)
+            
+            # Sync to Neo4j in real-time
+            try:
+                neo_result = sync_to_neo4j(
+                    user=username.lower(),
+                    skill_id=item["skill_id"],
+                    correct=correct,
+                    tags=tags
+                )
+                
+                # Show remediation mini-lesson if triggered
+                if neo_result.get("remediation"):
+                    rem = neo_result["remediation"]
+                    st.warning(f"📚 Remediation Triggered: {rem['misconception_name']}")
+                    st.write(f"**{rem['lesson_title']}**")
+                    st.write(rem['lesson_content'])
+                    
+                # Show updated Neo4j progress
+                prog = neo_result["progress"]
+                st.metric(
+                    "Neo4j Mastery",
+                    f"{prog['p_mastery']:.0%}",
+                    f"{prog['seen']} attempts, {prog['streak']} streak"
+                )
+            except Exception as e:
+                # Neo4j sync failed, but continue with local progress
+                pass
 
             # build feedback
             if correct:
