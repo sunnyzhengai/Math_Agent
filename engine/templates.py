@@ -85,7 +85,9 @@ def gen_factor_a1(difficulty="med"):
     correct = _format_factored(f"(x + {sp})(x + {sq})".replace("+ -","- "))
     # distractors
     d1 = _format_factored(f"(x + {p})(x + {q})".replace("+ -","- "))  # ignores signs
-    d2_str = f"(x + {sp})(x {('+' if -sq>=0 else '')} {abs(-sq)})"
+    # d2: flip the sign of one factor (not both)
+    flipped_sq = -sq
+    d2_str = f"(x + {sp})(x + {flipped_sq})"
     d2 = _format_factored(d2_str.replace("+ -","- "))  # sign flip on one
     d3 = _format_factored(f"(x + {sp+1})(x + {sq-1})".replace("+ -","- "))  # wrong pair summing to b
     choices = [
