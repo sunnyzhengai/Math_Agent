@@ -2,7 +2,6 @@
 import json, os
 from .state import ensure_skill, mastered
 from . import templates
-from math import fabs
 
 ROOT = os.path.dirname(__file__)
 

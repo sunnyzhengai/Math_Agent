@@ -1,11 +1,7 @@
 
 import random
 import copy
-from fractions import Fraction
 from math import gcd
-
-def _choice_id(i):
-    return ["a","b","c","d","e"][i]
 
 def _shuffle_choices(choices):
     # Make a deep copy so we don't mutate the original
