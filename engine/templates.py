@@ -383,12 +383,49 @@ def gen_identify_quadratic(difficulty="med"):
 
 # Registry
 GEN_BY_SKILL = {
+    # Original skill IDs
     "quad.factor.a1": gen_factor_a1,
     "quad.factor.an1": gen_factor_an1,
     "quad.vertex.form": gen_vertex_form,
     "quad.discriminant": gen_discriminant,
     "quad.formula": gen_quadratic_formula,
     "quad.identify": gen_identify_quadratic,
+    
+    # New skill IDs (map to existing generators)
+    # Factoring skills
+    "quad.convert.factor.simple": gen_factor_a1,        # a=1 factoring
+    "quad.convert.factor.complex": gen_factor_an1,      # a≠1 factoring
+    
+    # Form identification skills
+    "quad.form.identify.standard": gen_identify_quadratic,  # Identify standard form
+    "quad.form.identify.vertex": gen_vertex_form,           # Identify vertex form
+    "quad.form.identify.factored": gen_factor_a1,           # Identify factored form
+    
+    # Conversion skills (reuse existing generators)
+    "quad.convert.expand": gen_factor_a1,                   # Expand factored → standard
+    "quad.convert.complete_square": gen_vertex_form,        # Complete square → vertex
+    "quad.convert.vertex_to_standard": gen_vertex_form,     # Vertex → standard
+    "quad.convert.standard_to_vertex": gen_vertex_form,     # Standard → vertex
+    
+    # Solving skills
+    "quad.solve.by_factoring": gen_factor_a1,              # Solve by factoring
+    "quad.solve.by_completing_square": gen_vertex_form,    # Solve by completing square
+    "quad.solve.by_formula": gen_quadratic_formula,        # Quadratic formula
+    "quad.solve.discriminant": gen_discriminant,           # Discriminant reasoning
+    "quad.solve.by_graphing": gen_vertex_form,             # Solve by graphing
+    
+    # Graphing skills
+    "quad.graph.vertex": gen_vertex_form,                  # Find vertex
+    "quad.graph.axis": gen_vertex_form,                    # Axis of symmetry
+    "quad.graph.direction": gen_identify_quadratic,        # Opening direction
+    "quad.graph.intercepts": gen_factor_a1,                # Find intercepts
+    "quad.graph.sketch": gen_vertex_form,                  # Sketch parabola
+    
+    # Modeling skills
+    "quad.model.optimize": gen_vertex_form,                # Optimize with vertex
+    "quad.model.projectile": gen_quadratic_formula,        # Projectile motion
+    "quad.model.story": gen_quadratic_formula,             # Word problem mastery
+    
     # graph.features intentionally omitted for MVP items
 }
 
