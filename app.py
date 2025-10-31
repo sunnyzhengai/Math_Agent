@@ -3,7 +3,7 @@ import streamlit as st
 from engine import templates
 from engine.grader import grade
 from engine.state import load_user_state, save_user_state, ensure_skill, update_after_answer, mastered
-from engine.planner import next_skill, generate_item_for_skill, lesson_for_tags, SKILL_LIST, reload_skills
+from engine.planner import next_skill, generate_item_for_skill, generate_adaptive_item, lesson_for_tags, SKILL_LIST, reload_skills
 from engine.neo4j_sync import Neo4jSync, sync_to_neo4j, log_attempt_to_neo4j
 import time
 
@@ -97,7 +97,7 @@ else:
         if st.button("🎯 Get Next Question"):
             sid = next_skill(state)
             st.session_state.current_skill = sid
-            item = generate_item_for_skill(sid, difficulty="med")
+            item = generate_adaptive_item(sid, state)
             st.session_state.current_item = item
             st.session_state.feedback = None
 
@@ -110,6 +110,15 @@ else:
         item = st.session_state.current_item
         st.subheader(item["stem"])
         
+        # Show adaptive difficulty and mastery level (for transparency)
+        if "adaptive_difficulty" in item:
+            col_diff, col_mastery = st.columns([1, 2])
+            with col_diff:
+                difficulty_emoji = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}.get(item["adaptive_difficulty"], "❓")
+                st.caption(f"{difficulty_emoji} {item['adaptive_difficulty'].upper()}")
+            with col_mastery:
+                mastery_pct = int(item.get("learner_mastery", 0.6) * 100)
+                st.caption(f"📈 Mastery: {mastery_pct}%")
         
         options = {c["id"]: c["text"] for c in item["choices"]}
         choice = st.radio("Choose one:", list(options.keys()), format_func=lambda k: options[k])

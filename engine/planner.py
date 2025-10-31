@@ -98,6 +98,59 @@ def next_skill(state:dict):
     # Fallback to first skill
     return SKILL_LIST[0]["id"]
 
+def select_difficulty(p_mastery: float, streak: int = 0) -> str:
+    """
+    Adaptively select question difficulty based on learner's mastery level.
+    
+    Rules:
+    - p_mastery < 0.5: "easy" (confidence building)
+    - 0.5 ≤ p_mastery < 0.7: "medium" (challenge zone)
+    - 0.7 ≤ p_mastery < 0.85: "hard" (stretch)
+    - p_mastery ≥ 0.85: "hard" (advanced)
+    
+    With 15% random variation to keep it engaging.
+    """
+    import random
+    
+    # Add randomness 15% of the time
+    if random.random() < 0.15:
+        return random.choice(["easy", "medium", "hard"])
+    
+    # Deterministic rules based on mastery
+    if p_mastery < 0.5:
+        return "easy"
+    elif p_mastery < 0.7:
+        return "medium"
+    elif p_mastery < 0.85:
+        return "hard"
+    else:
+        return "hard"  # Already advanced, keep stretching
+
+def generate_adaptive_item(skill_id: str, state: dict):
+    """
+    Generate a question with adaptive difficulty selection.
+    
+    1. Get learner's current mastery for the skill
+    2. Select appropriate difficulty
+    3. Generate and return the item
+    """
+    # Get current mastery (default to 0.6 for new skills)
+    skill_state = state.get("skills", {}).get(skill_id, {})
+    p_mastery = skill_state.get("p_mastery", 0.6)
+    streak = skill_state.get("streak", 0)
+    
+    # Select difficulty adaptively
+    difficulty = select_difficulty(p_mastery, streak)
+    
+    # Generate item with selected difficulty
+    item = templates.generate_item(skill_id, difficulty)
+    
+    # Store the difficulty in item metadata for logging
+    item["adaptive_difficulty"] = difficulty
+    item["learner_mastery"] = p_mastery
+    
+    return item
+
 def generate_item_for_skill(skill_id:str, difficulty="med"):
     return templates.generate_item(skill_id, difficulty)
 
