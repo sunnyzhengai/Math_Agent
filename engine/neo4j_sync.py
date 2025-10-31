@@ -203,6 +203,94 @@ class Neo4jSync:
                 "updated": True
             }
     
+    def track_misconceptions(self,
+                           user: str,
+                           skill_id: str,
+                           tags: List[str]) -> dict:
+        """
+        Track misconception occurrences for this user on this skill.
+        
+        Creates/updates HAS_ERROR edges that count misconception detections.
+        Triggers remediation when count >= 2.
+        
+        Args:
+            user: Username (e.g., "Julia")
+            skill_id: Skill ID (e.g., "quad.factor.a1")
+            tags: List of misconception IDs detected (e.g., ["sign_error", "wrong_pair"])
+        
+        Returns:
+            dict with misconception counts and any triggered remediation
+        """
+        if not tags:
+            return {"misconceptions": {}, "remediation": None}
+        
+        with self.driver.session() as session:
+            # Track each misconception
+            misconceptions = {}
+            
+            for tag in tags:
+                # Ensure misconception exists and increment count
+                result = session.run("""
+                    // Ensure misconception exists
+                    MERGE (m:Misconception {id: $tag})
+                    
+                    // Track error for this user on this skill
+                    WITH m
+                    MATCH (u:User {name: $user}), (s:Skill {id: $skill_id})
+                    MERGE (u)-[e:HAS_ERROR {misconception_id: m.id, skill_id: $skill_id}]->(s)
+                    ON CREATE SET e.count = 0,
+                                  e.first_seen = datetime(),
+                                  e.triggered_remediation = false
+                    SET e.count = e.count + 1,
+                        e.last_seen = datetime()
+                    
+                    RETURN {
+                      misconception_id: m.id,
+                      misconception_name: m.name,
+                      count: e.count,
+                      triggered_remediation: e.triggered_remediation
+                    } AS error_info
+                """, tag=tag, user=user, skill_id=skill_id)
+                
+                error_info = result.single()["error_info"]
+                misconceptions[tag] = error_info
+            
+            # Check if any misconception reached remediation threshold (count >= 2)
+            remediation = None
+            for tag, error_info in misconceptions.items():
+                if error_info["count"] >= 2 and not error_info["triggered_remediation"]:
+                    # Get the lesson for this misconception
+                    lesson_result = session.run("""
+                        MATCH (m:Misconception {id: $tag})-[:HAS_RESOURCE]->(l:Lesson)
+                        RETURN {
+                          misconception_id: m.id,
+                          misconception_name: m.name,
+                          lesson_title: l.title,
+                          lesson_content: l.content,
+                          count: $count
+                        } AS lesson_info
+                    """, tag=tag, count=error_info["count"])
+                    
+                    lesson_data = lesson_result.single()
+                    if lesson_data:
+                        remediation = lesson_data["lesson_info"]
+                        
+                        # Mark that remediation was triggered for this misconception
+                        session.run("""
+                            MATCH (u:User {name: $user})-[e:HAS_ERROR {misconception_id: $tag, skill_id: $skill_id}]->(s:Skill)
+                            SET e.triggered_remediation = true,
+                                e.remediation_triggered_at = datetime()
+                        """, user=user, tag=tag, skill_id=skill_id)
+                    
+                    # Return first triggered remediation
+                    break
+            
+            return {
+                "misconceptions": misconceptions,
+                "remediation": remediation,
+                "updated": True
+            }
+    
     def get_dashboard(self, user: str) -> dict:
         """
         Get Julia's learning dashboard summary.
@@ -333,6 +421,38 @@ def log_attempt_to_neo4j(user: str,
     sync = Neo4jSync(uri=uri)
     try:
         return sync.log_attempt(user, skill_id, item_id, correct, tags, time_ms, confidence)
+    finally:
+        sync.close()
+
+
+def track_misconceptions_to_neo4j(user: str,
+                                 skill_id: str,
+                                 tags: List[str],
+                                 uri: str = "bolt://localhost:7687") -> dict:
+    """
+    Track misconceptions and trigger remediation when threshold is reached.
+    
+    Usage in Streamlit (after grading if tags detected):
+        result = grade(item, choice)
+        correct, tags, chosen_text, score = result
+        
+        if tags:
+            misconception_data = track_misconceptions_to_neo4j(
+                user="Julia",
+                skill_id=item["skill_id"],
+                tags=tags
+            )
+            
+            if misconception_data["remediation"]:
+                # Show mini-lesson
+                rem = misconception_data["remediation"]
+                st.warning(f"📚 {rem['misconception_name']}")
+                st.write(f"**{rem['lesson_title']}**")
+                st.write(rem['lesson_content'])
+    """
+    sync = Neo4jSync(uri=uri)
+    try:
+        return sync.track_misconceptions(user, skill_id, tags)
     finally:
         sync.close()
 
