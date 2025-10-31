@@ -122,6 +122,13 @@ else:
                 current_mastery = current_skill_state.get("p_mastery", 0.6)
                 mastery_pct = int(current_mastery * 100)
                 st.caption(f"📈 Mastery: {mastery_pct}%")
+            
+            # DEBUG: Show progression info
+            with st.expander("Debug Info"):
+                st.write(f"**Difficulty Source:** {item.get('difficulty_source', 'unknown')}")
+                st.write(f"**Progression Index:** {item.get('progression_index', 'N/A')}")
+                st.write(f"**Attempts:** {current_skill_state.get('attempts', 0)}")
+                st.write(f"**Skill ID:** {item.get('skill_id')}")
         
         options = {c["id"]: c["text"] for c in item["choices"]}
         choice = st.radio("Choose one:", list(options.keys()), format_func=lambda k: options[k])
