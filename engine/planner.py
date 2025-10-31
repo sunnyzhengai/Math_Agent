@@ -31,10 +31,18 @@ def reload_skills():
 
 def _remediation_for_tags(tag_counts:dict):
     # If any tag count >=2, route to its remedy_skill
+    # Exclude 'correct' tag (which is always high) and only look at misconception tags
     if not tag_counts:
         return None
-    max_tag = max(tag_counts, key=lambda k: tag_counts[k])
-    if tag_counts[max_tag] >= 2:
+    
+    # Filter out 'correct' tag
+    error_tags = {tag: count for tag, count in tag_counts.items() if tag != "correct"}
+    
+    if not error_tags:
+        return None
+    
+    max_tag = max(error_tags, key=lambda k: error_tags[k])
+    if error_tags[max_tag] >= 2:
         return MIS_BY_ID.get(max_tag, {}).get("remedy_skill")
     return None
 

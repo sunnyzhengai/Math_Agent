@@ -6,6 +6,7 @@ Tests that skill/difficulty selection matches expected behavior.
 import pytest
 from pathlib import Path
 import json
+import random
 
 from engine.planner import generate_adaptive_item, select_difficulty
 
@@ -17,21 +18,25 @@ class TestDifficultySelection:
     
     def test_low_mastery_gets_easy(self):
         """Mastery < 0.5 should select easy."""
+        random.seed(42)
         diff = select_difficulty(p_mastery=0.4, streak=0)
         assert diff == "easy"
     
     def test_medium_mastery_gets_medium(self):
         """0.5 <= mastery < 0.7 should select medium."""
+        random.seed(42)
         diff = select_difficulty(p_mastery=0.6, streak=0)
         assert diff == "medium"
     
     def test_high_mastery_gets_hard(self):
         """0.7 <= mastery < 0.85 should select hard."""
+        random.seed(42)
         diff = select_difficulty(p_mastery=0.75, streak=0)
         assert diff == "hard"
     
     def test_advanced_mastery_gets_hard(self):
         """Mastery >= 0.85 should select hard."""
+        random.seed(42)
         diff = select_difficulty(p_mastery=0.95, streak=5)
         assert diff == "hard"
 

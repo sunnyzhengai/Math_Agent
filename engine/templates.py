@@ -139,7 +139,21 @@ def gen_factor_a1(difficulty="med"):
     flipped_sq = -sq
     d2_str = f"(x + {sp})(x + {flipped_sq})"
     d2 = _format_factored(d2_str.replace("+ -","- "))  # sign flip on one
-    d3 = _format_factored(f"(x + {sp+1})(x + {sq-1})".replace("+ -","- "))  # wrong pair summing to b
+    
+    # d3: wrong pair - ensure it's distinct from correct
+    # Simple approach: use different but plausible values
+    # Start with sp+1, sq+1 then increment until distinct
+    d3_sp = sp + 1
+    d3_sq = sq + 1
+    # Skip if same as correct (accounting for commutativity)
+    attempts = 0
+    while attempts < 10:  # safety limit
+        if not ((d3_sp == sp and d3_sq == sq) or (d3_sp == sq and d3_sq == sp)):
+            break
+        d3_sp += 1
+        d3_sq -= 1
+        attempts += 1
+    d3 = _format_factored(f"(x + {d3_sp})(x + {d3_sq})".replace("+ -","- "))
     choices = [
         {"id":"a","text":correct,"tags_on_select":["correct"]},
         {"id":"b","text":d1,"tags_on_select":["sign_error"]},
