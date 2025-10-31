@@ -3,11 +3,12 @@
   "skills": {
     "quad.identify": {
       "p_mastery": 1.0,
-      "seen": 16,
-      "correct": 16,
-      "streak": 16,
+      "seen": 23,
+      "correct": 21,
+      "streak": 2,
       "tag_counts": {
-        "correct": 16
+        "correct": 21,
+        "misconception": 2
       }
     },
     "quad.factor.a1": {
@@ -40,5 +41,5 @@
     }
   },
   "history": [],
-  "questions_answered": 26
+  "questions_answered": 33
 }

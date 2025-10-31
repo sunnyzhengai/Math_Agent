@@ -340,31 +340,33 @@ def gen_identify_quadratic(difficulty="med"):
         ("(x - 3)²", True, "vertex_form_perfect_square"),
         ("2(x + 1)² - 5", True, "vertex_form_with_coeff"),
         
+        # 5. Missing some standard forms but still quadratic
+        ("x² + x", True, "missing_constant_term"),  # x² + x + 0
+        
         # NON-QUADRATICS (is_quad=False)
-        # 5. Linear expressions
+        # 6. Linear expressions
         ("x + 3", False, "linear_binomial"),
         ("2x - 5", False, "linear_with_coeff"),
         ("x", False, "linear_monomial"),
         ("5x", False, "linear_monomial_with_coeff"),
         
-        # 6. Constants
+        # 7. Constants
         ("5", False, "constant"),
         ("0", False, "constant"),
         ("-7", False, "constant"),
         
-        # 7. Cubic and higher
+        # 8. Cubic and higher
         ("x³ + 2x", False, "cubic"),
         ("x³ - x² + 1", False, "cubic_trinomial"),
         ("x⁴ + x²", False, "quartic"),
         ("x⁵ - 3x", False, "quintic"),
         
-        # 8. Mixed degree where highest is NOT 2
+        # 9. Mixed degree where highest is NOT 2
         ("x² + x³", False, "mixed_cubic_dominant"),
         ("x² + x³ - x", False, "mixed_cubic_dominant"),
-        ("x + x²", False, "mixed_but_not_highest"),  # Wait, this is quadratic!
         
-        # 9. Expressions that might be confusing
-        ("(x + 1)(x + 1)(x + 2)", False, "product_three_factors"),  # This expands to cubic
+        # 10. Other confusing cases
+        ("(x + 1)(x + 1)(x + 2)", False, "product_three_factors"),  # Expands to cubic
         ("x(x + 5) + 2x + 3", True, "expanded_appears_linear_terms"),  # x² + 5x + 2x + 3 = x² + 7x + 3
     ]
     
