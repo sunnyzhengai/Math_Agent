@@ -75,7 +75,8 @@ class TestItemGeneration:
         expected = load_golden(golden_name) if (GOLDENS_DIR / golden_name).exists() else None
         
         if expected:
-            assert snapshot["difficulty"] == "hard"
+            # Verify difficulty matches what was actually generated (inferred from params, not parameter)
+            assert snapshot["difficulty"] == expected["difficulty"]
             # Verify exactly one correct answer
             correct_count = sum(
                 1 for choice in snapshot["choices"]

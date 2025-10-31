@@ -1,0 +1,42 @@
+{
+  "skill_id": "quad.identify",
+  "difficulty": "easy",
+  "template_id": "quad.identify",
+  "stem": "Is the following expression a quadratic? 0",
+  "num_choices": 4,
+  "choices": [
+    {
+      "text": "No, this is not a quadratic.",
+      "tags_on_select": [
+        "correct"
+      ]
+    },
+    {
+      "text": "Yes, because every polynomial is quadratic.",
+      "tags_on_select": [
+        "misconception"
+      ]
+    },
+    {
+      "text": "Yes, constants are special quadratics.",
+      "tags_on_select": [
+        "misconception"
+      ]
+    },
+    {
+      "text": "Yes, if there's no variable, it's still quadratic.",
+      "tags_on_select": [
+        "misconception"
+      ]
+    }
+  ],
+  "solution": "No, this is not a quadratic.",
+  "validation": {
+    "has_correct": true,
+    "num_choices": 4,
+    "no_duplicates": true
+  },
+  "params": {
+    "seed": 42
+  }
+}

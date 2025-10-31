@@ -1,0 +1,42 @@
+{
+  "skill_id": "quad.vertex.form",
+  "difficulty": "easy",
+  "template_id": "quad.vertex.form",
+  "stem": "For y = 1(x - 4)\u00b2 + 4, what is the vertex and opening direction?",
+  "num_choices": 4,
+  "choices": [
+    {
+      "text": "Vertex (-4, 4), opens up",
+      "tags_on_select": [
+        "vertex_sign_flip"
+      ]
+    },
+    {
+      "text": "Vertex (4, -4), opens up",
+      "tags_on_select": [
+        "sign_error"
+      ]
+    },
+    {
+      "text": "Vertex (4, 4), opens down",
+      "tags_on_select": [
+        "axis_wrong_direction"
+      ]
+    },
+    {
+      "text": "Vertex (4, 4), opens up",
+      "tags_on_select": [
+        "correct"
+      ]
+    }
+  ],
+  "solution": "Vertex (4, 4), opens up",
+  "validation": {
+    "has_correct": true,
+    "num_choices": 4,
+    "no_duplicates": true
+  },
+  "params": {
+    "seed": 999
+  }
+}
