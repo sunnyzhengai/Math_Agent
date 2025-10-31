@@ -135,6 +135,9 @@ else:
             state["questions_answered"] = questions_answered + 1
             save_user_state(username, state)
             
+            # Reload state to show updated mastery immediately
+            state = load_user_state(username)
+            
             # Calculate time spent
             time_ms = int((time.time() - attempt_start) * 1000)
             
@@ -190,6 +193,11 @@ else:
                 icon = "❌ Not quite. (No credit)"
             lessons = lesson_for_tags(tags)
             st.session_state.feedback = (icon, tags, lessons, item)
+            
+            # Show updated mastery immediately
+            skill_state = state["skills"].get(item["skill_id"], {})
+            new_mastery = skill_state.get("p_mastery", 0.6)
+            st.success(f"📈 **Mastery updated: {new_mastery:.0%}**")
 
         if st.session_state.feedback:
             icon, tags, lessons, item = st.session_state.feedback
