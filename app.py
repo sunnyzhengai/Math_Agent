@@ -4,7 +4,8 @@ from engine import templates
 from engine.grader import grade
 from engine.state import load_user_state, save_user_state, ensure_skill, update_after_answer, mastered
 from engine.planner import next_skill, generate_item_for_skill, lesson_for_tags, SKILL_LIST
-from engine.neo4j_sync import Neo4jSync, sync_to_neo4j
+from engine.neo4j_sync import Neo4jSync, sync_to_neo4j, log_attempt_to_neo4j
+import time
 
 st.set_page_config(page_title="Quadratics MVP", page_icon="🧮", layout="centered")
 
@@ -111,6 +112,9 @@ else:
         choice = st.radio("Choose one:", list(options.keys()), format_func=lambda k: options[k])
 
         if st.button("Submit"):
+            # Track time for analytics
+            attempt_start = time.time()
+            
             result = grade(item, choice)
             correct, tags, chosen_text, score = result
             update_after_answer(state, item["skill_id"], correct, tags)
@@ -118,6 +122,25 @@ else:
             # Increment questions answered
             state["questions_answered"] = questions_answered + 1
             save_user_state(username, state)
+            
+            # Calculate time spent
+            time_ms = int((time.time() - attempt_start) * 1000)
+            
+            # Log attempt to Neo4j (immutable record)
+            try:
+                attempt_log = log_attempt_to_neo4j(
+                    user=username.lower(),
+                    skill_id=item["skill_id"],
+                    item_id=item["id"],
+                    correct=correct,
+                    tags=tags,
+                    time_ms=time_ms
+                )
+                # Store attempt_id in session for reference
+                st.session_state.last_attempt_id = attempt_log.get("attempt_id")
+            except Exception as e:
+                # Log failed, continue
+                pass
             
             # Sync to Neo4j in real-time
             try:

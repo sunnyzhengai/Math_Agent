@@ -8,6 +8,8 @@ automatically updating mastery scores and triggering remediation.
 from neo4j import GraphDatabase
 from typing import Optional, List
 import os
+from datetime import datetime
+import uuid
 
 
 class Neo4jSync:
@@ -25,6 +27,83 @@ class Neo4jSync:
     def close(self):
         """Close Neo4j connection"""
         self.driver.close()
+    
+    def log_attempt(self,
+                   user: str,
+                   skill_id: str,
+                   item_id: str,
+                   correct: bool,
+                   tags: List[str],
+                   time_ms: int = 0,
+                   confidence: Optional[int] = None) -> dict:
+        """
+        Create an immutable Attempt node and link it to user and skill.
+        
+        This is the audit trail for analytics, mastery calculations, and spaced review.
+        
+        Args:
+            user: Username (e.g., "Julia")
+            skill_id: Skill ID (e.g., "quad.factor.a1")
+            item_id: Question item ID (e.g., "factor_a1_3_2_1234")
+            correct: Whether the answer was correct
+            tags: List of misconception tags detected (e.g., ["vertex_sign_flip"])
+            time_ms: Time taken to answer in milliseconds
+            confidence: Optional confidence rating (1-5)
+        
+        Returns:
+            dict with attempt details
+        """
+        attempt_id = str(uuid.uuid4())
+        
+        with self.driver.session() as session:
+            # Create immutable Attempt node and link to user and skill
+            result = session.run("""
+                // Create Attempt node (immutable)
+                CREATE (a:Attempt {
+                  id: $attempt_id,
+                  ts: datetime(),
+                  skill_id: $skill_id,
+                  item_id: $item_id,
+                  correct: $correct,
+                  tags: $tags,
+                  time_ms: $time_ms,
+                  confidence: $confidence
+                })
+                
+                // Link attempt to user
+                MATCH (u:User {name: $user})
+                CREATE (u)-[:MADE_ATTEMPT]->(a)
+                
+                // Link attempt to skill
+                MATCH (s:Skill {id: $skill_id})
+                CREATE (a)-[:ASSESSED]->(s)
+                
+                RETURN {
+                  attempt_id: a.id,
+                  ts: a.ts,
+                  skill_id: a.skill_id,
+                  item_id: a.item_id,
+                  correct: a.correct,
+                  tags: a.tags,
+                  time_ms: a.time_ms,
+                  confidence: a.confidence
+                } AS attempt
+            """, 
+            attempt_id=attempt_id,
+            user=user,
+            skill_id=skill_id,
+            item_id=item_id,
+            correct=correct,
+            tags=tags,
+            time_ms=time_ms,
+            confidence=confidence)
+            
+            attempt = result.single()["attempt"]
+            return {
+                "attempt_id": attempt["attempt_id"],
+                "logged": True,
+                "details": attempt
+            }
     
     def update_progress(self, 
                        user: str,
@@ -214,6 +293,37 @@ def sync_to_neo4j(user: str,
     sync = Neo4jSync(uri=uri)
     try:
         return sync.update_progress(user, skill_id, correct, tags)
+    finally:
+        sync.close()
+
+
+def log_attempt_to_neo4j(user: str,
+                        skill_id: str,
+                        item_id: str,
+                        correct: bool,
+                        tags: List[str],
+                        time_ms: int = 0,
+                        confidence: Optional[int] = None,
+                        uri: str = "bolt://localhost:7687") -> dict:
+    """
+    Log an attempt as an immutable record.
+    
+    Usage in Streamlit (after grading):
+        result = grade(item, choice)
+        correct, tags, chosen_text, score = result
+        attempt = log_attempt_to_neo4j(
+            user="Julia",
+            skill_id=item["skill_id"],
+            item_id=item["id"],
+            correct=correct,
+            tags=tags,
+            time_ms=elapsed_ms
+        )
+        # attempt["attempt_id"] is the unique log entry
+    """
+    sync = Neo4jSync(uri=uri)
+    try:
+        return sync.log_attempt(user, skill_id, item_id, correct, tags, time_ms, confidence)
     finally:
         sync.close()
 
