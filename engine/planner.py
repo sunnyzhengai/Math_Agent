@@ -1,5 +1,6 @@
 
 import json, os
+from typing import Optional
 from .state import ensure_skill, mastered
 from . import templates
 
@@ -126,7 +127,7 @@ def select_difficulty(p_mastery: float, streak: int = 0) -> str:
     else:
         return "hard"  # Already advanced, keep stretching
 
-def generate_adaptive_item(skill_id: str, state: dict):
+def generate_adaptive_item(skill_id: str, state: dict, seed: Optional[int] = None, difficulty_hint: Optional[str] = None):
     """
     Generate a question with adaptive difficulty selection.
     
@@ -152,8 +153,11 @@ def generate_adaptive_item(skill_id: str, state: dict):
     skill_def = SKILL_BY_ID.get(skill_id, {})
     progression = skill_def.get("progression")
     
-    # Determine difficulty
-    if progression and attempts < len(progression):
+    # Determine difficulty (allow override for testing)
+    if difficulty_hint:
+        difficulty = difficulty_hint
+        difficulty_source = "hint"
+    elif progression and attempts < len(progression):
         # Use progression array to ensure natural cadence
         difficulty = progression[attempts]
         difficulty_source = "progression"
@@ -162,8 +166,8 @@ def generate_adaptive_item(skill_id: str, state: dict):
         difficulty = select_difficulty(p_mastery, streak)
         difficulty_source = "adaptive"
     
-    # Generate item with selected difficulty
-    item = templates.generate_item(skill_id, difficulty)
+    # Generate item with selected difficulty (pass seed for reproducibility)
+    item = templates.generate_item(skill_id, difficulty, seed=seed)
     
     # Store the difficulty in item metadata for logging
     item["adaptive_difficulty"] = difficulty

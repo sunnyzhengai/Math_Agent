@@ -2,7 +2,13 @@
 import random
 import copy
 from math import gcd
+from typing import Optional
 from .math_validators import validate_item_math
+
+def _set_seed(seed: Optional[int]):
+    """Helper to set random seed for deterministic testing."""
+    if seed is not None:
+        random.seed(seed)
 
 def _shuffle_choices(choices):
     # Make a deep copy so we don't mutate the original
@@ -491,7 +497,8 @@ GEN_BY_SKILL = {
     # graph.features intentionally omitted for MVP items
 }
 
-def generate_item(skill_id, difficulty="med"):
+def generate_item(skill_id, difficulty="med", seed: Optional[int] = None):
+    _set_seed(seed)
     fn = GEN_BY_SKILL.get(skill_id)
     if not fn:
         # fall back to a compatible related generator
