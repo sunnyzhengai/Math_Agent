@@ -4,11 +4,53 @@ Pytest configuration and fixtures for golden tests.
 
 import pytest
 import sys
+import os
+import random
+import datetime as dt
+import json
 from pathlib import Path
 
 # Add parent directory to path so we can import engine modules
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
+
+# ============================================================================
+# ChatGPT-recommended fixtures (from golden test suite template)
+# ============================================================================
+
+@pytest.fixture(scope="session")
+def goldens_dir():
+    """Fixture: Path to goldens/ directory."""
+    return Path(__file__).parent / "goldens"
+
+
+@pytest.fixture
+def seed42():
+    """Fixture: Seed RNG with 42 for deterministic tests."""
+    random.seed(42)
+    try:
+        import numpy as np
+        np.random.seed(42)
+    except Exception:
+        pass
+    return 42
+
+
+@pytest.fixture
+def fake_now():
+    """Fixture: Fixed timestamp for time-dependent logic tests."""
+    return dt.datetime(2025, 10, 31, 12, 0, 0)
+
+
+def load_json(path):
+    """Helper: Load JSON from file."""
+    with open(path, "r") as f:
+        return json.load(f)
+
+
+# ============================================================================
+# State fixtures (from original conftest)
+# ============================================================================
 
 @pytest.fixture
 def fresh_state():
