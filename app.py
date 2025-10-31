@@ -3,11 +3,14 @@ import streamlit as st
 from engine import templates
 from engine.grader import grade
 from engine.state import load_user_state, save_user_state, ensure_skill, update_after_answer, mastered
-from engine.planner import next_skill, generate_item_for_skill, lesson_for_tags, SKILL_LIST
+from engine.planner import next_skill, generate_item_for_skill, lesson_for_tags, SKILL_LIST, reload_skills
 from engine.neo4j_sync import Neo4jSync, sync_to_neo4j, log_attempt_to_neo4j
 import time
 
 st.set_page_config(page_title="Quadratics MVP", page_icon="🧮", layout="centered")
+
+# Force reload skills on every app run (supports hot-reload of skills.json)
+reload_skills()
 
 st.title("🧮 Quadratics Mastery (MVP)")
 

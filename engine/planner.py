@@ -6,6 +6,7 @@ from . import templates
 ROOT = os.path.dirname(__file__)
 
 def load_skills():
+    """Load skills from JSON file (called fresh each time for hot-reload support)"""
     with open(os.path.join(ROOT,"skills.json")) as f:
         return json.load(f)["skills"]
 
@@ -14,9 +15,18 @@ def load_misconceptions():
         data = json.load(f)
         return {t["id"]: t for t in data["tags"]}
 
+# Module-level cache (can be reloaded)
 SKILL_LIST = load_skills()
 SKILL_BY_ID = {s["id"]: s for s in SKILL_LIST}
 MIS_BY_ID = load_misconceptions()
+
+def reload_skills():
+    """Force reload skills from disk (for Streamlit hot-reload)"""
+    global SKILL_LIST, SKILL_BY_ID, MIS_BY_ID
+    SKILL_LIST = load_skills()
+    SKILL_BY_ID = {s["id"]: s for s in SKILL_LIST}
+    MIS_BY_ID = load_misconceptions()
+    return SKILL_LIST
 
 def _remediation_for_tags(tag_counts:dict):
     # If any tag count >=2, route to its remedy_skill
