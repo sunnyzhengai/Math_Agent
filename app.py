@@ -117,7 +117,10 @@ else:
                 difficulty_emoji = {"easy": "🟢", "medium": "🟡", "hard": "🔴"}.get(item["adaptive_difficulty"], "❓")
                 st.caption(f"{difficulty_emoji} {item['adaptive_difficulty'].upper()}")
             with col_mastery:
-                mastery_pct = int(item.get("learner_mastery", 0.6) * 100)
+                # Get CURRENT mastery from state (not from frozen item)
+                current_skill_state = state.get("skills", {}).get(item.get("skill_id"), {})
+                current_mastery = current_skill_state.get("p_mastery", 0.6)
+                mastery_pct = int(current_mastery * 100)
                 st.caption(f"📈 Mastery: {mastery_pct}%")
         
         options = {c["id"]: c["text"] for c in item["choices"]}
