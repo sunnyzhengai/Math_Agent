@@ -113,11 +113,14 @@ class Neo4jSync:
                        delta_win: float = 0.08,
                        delta_loss: float = 0.12) -> dict:
         """
-        Update user's progress on a skill after answering a question.
+        Atomically update user's progress on a skill.
+        
+        Uses MERGE to ensure the HAS_PROGRESS relationship exists,
+        then performs one-step stochastic mastery update.
         
         Args:
             user: Username (e.g., "Julia")
-            skill_id: Skill ID (e.g., "quad.form.identify.vertex")
+            skill_id: Skill ID (e.g., "quad.factor.a1")
             correct: Whether the answer was correct
             tags: List of misconception tags detected
             delta_win: Points to add if correct (0-1)
@@ -128,24 +131,30 @@ class Neo4jSync:
         """
         
         with self.driver.session() as session:
-            # Update progress node
+            # One-step atomic mastery update on the edge
             result = session.run("""
-                MATCH (user:User {name: $user})-[prog:HAS_PROGRESS]->(skill:Skill {id: $skill_id})
-                SET prog.seen = prog.seen + 1,
-                    prog.correct = CASE WHEN $correct THEN prog.correct + 1 ELSE prog.correct END,
-                    prog.streak = CASE WHEN $correct THEN prog.streak + 1 ELSE 0 END,
-                    prog.last_attempt = datetime(),
-                    prog.p_mastery = CASE 
-                        WHEN $correct THEN min(1.0, prog.p_mastery + $delta_win)
-                        ELSE max(0.0, prog.p_mastery - $delta_loss)
-                    END
+                MATCH (user:User {name: $user}), (skill:Skill {id: $skill_id})
+                MERGE (user)-[r:HAS_PROGRESS]->(skill)
+                ON CREATE SET r.p_mastery = 0.6, 
+                              r.seen = 0, 
+                              r.correct = 0, 
+                              r.streak = 0, 
+                              r.last = datetime()
+                SET r.seen = r.seen + 1,
+                    r.correct = r.correct + CASE WHEN $correct THEN 1 ELSE 0 END,
+                    r.streak = CASE WHEN $correct THEN r.streak + 1 ELSE 0 END,
+                    r.p_mastery = apoc.number.min(1.0,
+                                    apoc.number.max(0.0,
+                                      r.p_mastery + CASE WHEN $correct THEN $delta_win ELSE -$delta_loss END
+                                    )),
+                    r.last = datetime()
                 RETURN {
                   skill_id: skill.id,
                   skill_name: skill.name,
-                  p_mastery: prog.p_mastery,
-                  seen: prog.seen,
-                  correct: prog.correct,
-                  streak: prog.streak,
+                  p_mastery: r.p_mastery,
+                  seen: r.seen,
+                  correct: r.correct,
+                  streak: r.streak,
                   correct_flag: $correct,
                   tags: $tags
                 } AS result
