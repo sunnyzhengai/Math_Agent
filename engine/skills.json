@@ -3,126 +3,144 @@
     {
       "id": "quad.form.identify.standard",
       "name": "Identify standard form",
-      "prereqs": []
+      "prereqs": [],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.form.identify.vertex",
       "name": "Identify vertex form",
       "prereqs": [
         "quad.form.identify.standard"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.form.identify.factored",
       "name": "Identify factored form",
       "prereqs": [
         "quad.form.identify.standard"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.convert.vertex_to_standard",
       "name": "Convert vertex→standard",
       "prereqs": [
         "quad.form.identify.vertex"
-      ]
+      ],
+      "progression": ["easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.convert.factor.simple",
       "name": "Factor when a=1",
       "prereqs": [
         "quad.form.identify.standard"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.convert.factor.complex",
       "name": "Factor when a≠1",
       "prereqs": [
         "quad.convert.factor.simple"
-      ]
+      ],
+      "progression": ["medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.convert.expand",
       "name": "Expand to standard form",
       "prereqs": [
         "quad.form.identify.factored"
-      ]
+      ],
+      "progression": ["easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.convert.complete_square",
       "name": "Complete the square",
       "prereqs": [
         "quad.convert.expand"
-      ]
+      ],
+      "progression": ["medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.convert.standard_to_vertex",
       "name": "Convert standard→vertex",
       "prereqs": [
         "quad.convert.complete_square"
-      ]
+      ],
+      "progression": ["medium", "hard", "hard", "hard", "hard"]
     },
     {
       "id": "quad.solve.by_factoring",
       "name": "Solve by factoring",
       "prereqs": [
         "quad.convert.factor.simple"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.solve.by_completing_square",
       "name": "Solve by completing the square",
       "prereqs": [
         "quad.convert.complete_square"
-      ]
+      ],
+      "progression": ["medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.solve.by_formula",
       "name": "Quadratic formula",
       "prereqs": [
         "quad.form.identify.standard"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.solve.discriminant",
       "name": "Discriminant reasoning",
       "prereqs": [
         "quad.form.identify.standard"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.solve.by_graphing",
       "name": "Solve by graphing",
       "prereqs": [
         "quad.graph.sketch"
-      ]
+      ],
+      "progression": ["medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.graph.vertex",
       "name": "Find vertex",
       "prereqs": [
         "quad.form.identify.vertex"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.graph.axis",
       "name": "Axis of symmetry",
       "prereqs": [
         "quad.graph.vertex"
-      ]
+      ],
+      "progression": ["easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.graph.direction",
       "name": "Opening direction",
       "prereqs": [
         "quad.form.identify.vertex"
-      ]
+      ],
+      "progression": ["easy", "easy", "medium", "medium", "hard"]
     },
     {
       "id": "quad.graph.intercepts",
       "name": "Find intercepts",
       "prereqs": [
         "quad.convert.factor.simple"
-      ]
+      ],
+      "progression": ["easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.graph.sketch",
@@ -131,14 +149,16 @@
         "quad.graph.vertex",
         "quad.graph.axis",
         "quad.graph.direction"
-      ]
+      ],
+      "progression": ["medium", "medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.model.optimize",
       "name": "Optimize with vertex",
       "prereqs": [
         "quad.graph.vertex"
-      ]
+      ],
+      "progression": ["medium", "hard", "hard", "hard"]
     },
     {
       "id": "quad.model.projectile",
@@ -146,7 +166,8 @@
       "prereqs": [
         "quad.solve.by_formula",
         "quad.graph.vertex"
-      ]
+      ],
+      "progression": ["hard", "hard", "hard"]
     },
     {
       "id": "quad.model.story",
@@ -154,7 +175,8 @@
       "prereqs": [
         "quad.model.optimize",
         "quad.model.projectile"
-      ]
+      ],
+      "progression": ["hard", "hard", "hard"]
     }
   ]
 }

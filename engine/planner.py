@@ -130,17 +130,37 @@ def generate_adaptive_item(skill_id: str, state: dict):
     """
     Generate a question with adaptive difficulty selection.
     
-    1. Get learner's current mastery for the skill
-    2. Select appropriate difficulty
-    3. Generate and return the item
+    1. Check skill's progression array (if available)
+       - Use question count within the skill to index into progression
+    2. Fallback to adaptive mastery-based selection
+    3. Get learner's current mastery for the skill
+    4. Generate and return the item
+    
+    Progression arrays ensure natural cadence:
+      Q1-2: easy (confidence)
+      Q3-4: medium (challenge)
+      Q5-6: hard (stretch)
+      Q7+: hard/applied (deep mastery)
     """
     # Get current mastery (default to 0.6 for new skills)
     skill_state = state.get("skills", {}).get(skill_id, {})
     p_mastery = skill_state.get("p_mastery", 0.6)
     streak = skill_state.get("streak", 0)
+    attempts = skill_state.get("attempts", 0)  # How many questions for this skill
     
-    # Select difficulty adaptively
-    difficulty = select_difficulty(p_mastery, streak)
+    # Get the skill definition to check for progression array
+    skill_def = SKILL_BY_ID.get(skill_id, {})
+    progression = skill_def.get("progression")
+    
+    # Determine difficulty
+    if progression and attempts < len(progression):
+        # Use progression array to ensure natural cadence
+        difficulty = progression[attempts]
+        difficulty_source = "progression"
+    else:
+        # Fallback to adaptive mastery-based selection
+        difficulty = select_difficulty(p_mastery, streak)
+        difficulty_source = "adaptive"
     
     # Generate item with selected difficulty
     item = templates.generate_item(skill_id, difficulty)
@@ -148,6 +168,8 @@ def generate_adaptive_item(skill_id: str, state: dict):
     # Store the difficulty in item metadata for logging
     item["adaptive_difficulty"] = difficulty
     item["learner_mastery"] = p_mastery
+    item["difficulty_source"] = difficulty_source
+    item["progression_index"] = attempts if progression else None
     
     return item
 

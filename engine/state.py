@@ -29,6 +29,7 @@ def ensure_skill(state:dict, skill_id:str):
             "seen": 0,
             "correct": 0,
             "streak": 0,
+            "attempts": 0,  # Track question count for progression array
             "tag_counts": {}
         }
     return skills[skill_id]
@@ -36,6 +37,7 @@ def ensure_skill(state:dict, skill_id:str):
 def update_after_answer(state:dict, skill_id:str, correct:bool, tags:list, delta_win=0.08, delta_loss=0.12, difficulty_weight=1.0):
     s = ensure_skill(state, skill_id)
     s["seen"] += 1
+    s["attempts"] = s.get("attempts", 0) + 1  # Increment question count
     if correct:
         s["correct"] += 1
         s["streak"] += 1
