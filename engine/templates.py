@@ -63,6 +63,50 @@ def _simplify_coefficients(a, b, c):
         return a // g, b // g, c // g
     return a, b, c
 
+def _infer_difficulty(a=None, b=None, c=None, h=None, k=None, has_fractions=False, num_params=None):
+    """
+    Auto-infer difficulty based on parameters:
+    - easy: single digit coefficients, a=1, integer params, no negatives
+    - medium: a≠1, mixed signs, moderate values
+    - hard: large coefficients, multiple negatives, fractions/decimals
+    - applied: requires interpretation beyond simple computation
+    
+    Returns: "easy", "medium", "hard", or "applied"
+    """
+    if has_fractions:
+        return "hard"
+    
+    # Count parameters for complexity estimate
+    params = [p for p in [a, b, c, h, k] if p is not None]
+    
+    if not params:
+        return "medium"  # default
+    
+    # Easy: a=1, small absolute values, all positive or simple sign pattern
+    if a is not None:
+        if a == 1:
+            max_val = max(abs(p) for p in params if p is not None)
+            if max_val <= 3:
+                return "easy"
+        elif abs(a) > 3:
+            return "hard"  # large leading coefficient
+    
+    # Hard: large coefficients or many negative signs
+    max_val = max(abs(p) for p in params if p is not None)
+    if max_val >= 6:
+        return "hard"
+    
+    # Medium: moderate complexity
+    if a is not None and a != 1:
+        return "medium"
+    
+    # Count negative values (sign complexity)
+    neg_count = sum(1 for p in params if p is not None and p < 0)
+    if neg_count >= 2:
+        return "medium"
+    
+    return "easy"
+
 
 def gen_factor_a1(difficulty="med"):
     """
@@ -96,9 +140,12 @@ def gen_factor_a1(difficulty="med"):
         {"id":"c","text":d2,"tags_on_select":["sign_error"]},
         {"id":"d","text":d3,"tags_on_select":["wrong_pair"]},
     ]
+    # Infer difficulty from parameters
+    inferred_diff = _infer_difficulty(a=1, b=b, c=c)
     return {
         "id": f"factor_a1_{abs(b)}_{abs(c)}_{random.randint(1000,9999)}",
         "skill_id":"quad.factor.a1",
+        "difficulty": inferred_diff,
         "stem": stem,
         "choices": _shuffle_choices(choices),
         "solution": correct,
@@ -130,9 +177,12 @@ def gen_factor_an1(difficulty="med"):
         {"id":"c","text":d2,"tags_on_select":["cross_product_mismatch"]},
         {"id":"d","text":d3,"tags_on_select":["sign_error"]},
     ]
+    # Infer difficulty from parameters
+    inferred_diff = _infer_difficulty(a=a, b=b, c=c)
     return {
         "id": f"factor_an1_{a}_{abs(b)}_{abs(c)}_{random.randint(1000,9999)}",
         "skill_id":"quad.factor.an1",
+        "difficulty": inferred_diff,
         "stem": stem,
         "choices": _shuffle_choices(choices),
         "solution": correct,
@@ -167,9 +217,12 @@ def gen_vertex_form(difficulty="med"):
         {"id":"c","text":d2,"tags_on_select":["axis_wrong_direction"]},
         {"id":"d","text":d3,"tags_on_select":["sign_error"]},
     ]
+    # Infer difficulty from parameters
+    inferred_diff = _infer_difficulty(a=a, h=h, k=k)
     return {
         "id": f"vertex_{a}_{h}_{k}_{random.randint(1000,9999)}",
         "skill_id":"quad.vertex.form",
+        "difficulty": inferred_diff,
         "stem": stem,
         "choices": _shuffle_choices(choices),
         "solution": correct,
@@ -204,9 +257,12 @@ def gen_discriminant(difficulty="med"):
         {"id":"c","text":"no real solutions" if truth!="no real solutions" else "two real solutions","tags_on_select":["under_root_error"]},
         {"id":"d","text":"cannot be determined","tags_on_select":["under_root_error"]},
     ]
+    # Infer difficulty from parameters
+    inferred_diff = _infer_difficulty(a=a, b=b, c=c)
     return {
         "id": f"disc_{a}_{b}_{c}_{random.randint(1000,9999)}",
         "skill_id":"quad.discriminant",
+        "difficulty": inferred_diff,
         "stem": stem,
         "choices": _shuffle_choices(choices),
         "solution": truth,
@@ -239,9 +295,12 @@ def gen_quadratic_formula(difficulty="med"):
         {"id":"c","text":d2,"tags_on_select":["under_root_error"]},
         {"id":"d","text":d3,"tags_on_select":["one_root_only"]},
     ]
+    # Infer difficulty from parameters
+    inferred_diff = _infer_difficulty(a=a, b=b, c=c)
     return {
         "id": f"qf_{a}_{b}_{c}_{random.randint(1000,9999)}",
         "skill_id":"quad.formula",
+        "difficulty": inferred_diff,
         "stem": stem,
         "choices": _shuffle_choices(choices),
         "solution": correct,
@@ -375,6 +434,7 @@ def gen_identify_quadratic(difficulty="med"):
     return {
         "id": f"identify_{category}_{random.randint(1000,9999)}",
         "skill_id":"quad.identify",
+        "difficulty": "easy",  # Identification is always foundational
         "stem": stem,
         "choices": _shuffle_choices(choices),
         "solution": correct,

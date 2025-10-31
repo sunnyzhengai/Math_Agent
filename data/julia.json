@@ -2,12 +2,12 @@
   "username": "julia",
   "skills": {
     "quad.identify": {
-      "p_mastery": 0.9199999999999998,
-      "seen": 4,
-      "correct": 4,
-      "streak": 4,
+      "p_mastery": 1.0,
+      "seen": 16,
+      "correct": 16,
+      "streak": 16,
       "tag_counts": {
-        "correct": 4
+        "correct": 16
       }
     },
     "quad.factor.a1": {
@@ -40,5 +40,5 @@
     }
   },
   "history": [],
-  "questions_answered": 14
+  "questions_answered": 26
 }
