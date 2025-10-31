@@ -291,6 +291,212 @@ class Neo4jSync:
                 "updated": True
             }
     
+    def plan_next_skill(self, user: str) -> dict:
+        """
+        Decide what skill to present next using adaptive routing.
+        
+        Routing priority:
+        1. If misconception detected ≥2 times → jump to remediation skill
+        2. Else pick lowest-mastery unmastered skill (prerequisites satisfied)
+        3. Else schedule spaced review (oldest overdue skill)
+        
+        Args:
+            user: Username (e.g., "Julia")
+        
+        Returns:
+            dict with next_skill_id, reason, and suggested_resources
+        """
+        with self.driver.session() as session:
+            # Priority 1: Check for hottest error tag (remediation jump)
+            error_result = session.run("""
+                MATCH (u:User {name: $user})-[e:HAS_ERROR]->(s:Skill)
+                WHERE e.count >= 2
+                ORDER BY e.count DESC
+                LIMIT 1
+                RETURN e.misconception_id AS tag, s.id AS skill_id
+            """, user=user)
+            
+            error_data = error_result.single()
+            if error_data:
+                tag = error_data["tag"]
+                # Get the remediation skill for this misconception
+                remedy_result = session.run("""
+                    MATCH (m:Misconception {id: $tag})-[:REMEDIATES]->(remedy:Skill)
+                    RETURN remedy.id AS remedy_skill_id, remedy.name AS remedy_skill_name
+                """, tag=tag)
+                
+                remedy_data = remedy_result.single()
+                if remedy_data:
+                    # Get resources for remedy skill
+                    resources = self._get_resources_for_skill(session, remedy_data["remedy_skill_id"])
+                    
+                    return {
+                        "next_skill_id": remedy_data["remedy_skill_id"],
+                        "next_skill_name": remedy_data["remedy_skill_name"],
+                        "reason": f"Repeated misconception detected: {tag}",
+                        "reason_type": "remediation_jump",
+                        "suggested_resources": resources,
+                        "updated": True
+                    }
+            
+            # Priority 2: Pick lowest-mastery unmastered skill (prerequisites satisfied)
+            main_result = session.run("""
+                MATCH (s:Skill {domain: "Quadratics"})
+                WHERE NOT EXISTS {
+                  MATCH (pre:Skill)-[:PRECEDES]->(s)
+                  MATCH (u:User {name: $user})-[rp:HAS_PROGRESS]->(pre)
+                  WHERE coalesce(rp.p_mastery, 0) < 0.8
+                }
+                OPTIONAL MATCH (u:User {name: $user})-[r:HAS_PROGRESS]->(s)
+                WITH s, coalesce(r.p_mastery, 0.6) AS p, r
+                WHERE p < 0.9
+                RETURN s.id AS skill_id,
+                       s.name AS skill_name,
+                       p AS p_mastery,
+                       abs(p - 0.5) AS entropy_gap
+                ORDER BY entropy_gap ASC
+                LIMIT 1
+            """, user=user)
+            
+            main_data = main_result.single()
+            if main_data:
+                resources = self._get_resources_for_skill(session, main_data["skill_id"])
+                
+                # Determine reason based on mastery level
+                p = main_data["p_mastery"]
+                if p < 0.3:
+                    reason = f"You're struggling with {main_data['skill_name']} - build confidence"
+                elif p < 0.5:
+                    reason = f"Close to halfway on {main_data['skill_name']} - keep going!"
+                elif p < 0.7:
+                    reason = f"Good progress on {main_data['skill_name']} - aim for mastery"
+                else:
+                    reason = f"Almost there on {main_data['skill_name']}!"
+                
+                return {
+                    "next_skill_id": main_data["skill_id"],
+                    "next_skill_name": main_data["skill_name"],
+                    "reason": reason,
+                    "reason_type": "learning_path",
+                    "p_mastery": p,
+                    "suggested_resources": resources,
+                    "updated": True
+                }
+            
+            # Priority 3: Spaced review (oldest overdue skill)
+            review_result = session.run("""
+                MATCH (u:User {name: $user})-[r:HAS_PROGRESS]->(s:Skill)
+                WHERE r.p_mastery >= 0.8 AND r.due_at <= datetime()
+                RETURN s.id AS skill_id,
+                       s.name AS skill_name,
+                       r.due_at AS due_at,
+                       r.p_mastery AS p_mastery
+                ORDER BY r.due_at ASC
+                LIMIT 1
+            """, user=user)
+            
+            review_data = review_result.single()
+            if review_data:
+                resources = self._get_resources_for_skill(session, review_data["skill_id"])
+                
+                return {
+                    "next_skill_id": review_data["skill_id"],
+                    "next_skill_name": review_data["skill_name"],
+                    "reason": f"Time to review {review_data['skill_name']} (spaced repetition)",
+                    "reason_type": "spaced_review",
+                    "p_mastery": review_data["p_mastery"],
+                    "suggested_resources": resources,
+                    "updated": True
+                }
+            
+            # Fallback: return None (all skills mastered + no review due)
+            return {
+                "next_skill_id": None,
+                "reason": "🎉 All skills mastered! Great work!",
+                "reason_type": "mastery_complete",
+                "suggested_resources": [],
+                "updated": False
+            }
+    
+    def _get_resources_for_skill(self, session, skill_id: str) -> List[dict]:
+        """
+        Get curated resources (lessons, Khan links, etc.) for a skill.
+        
+        Returns list of resources with title, url, type.
+        """
+        result = session.run("""
+            MATCH (s:Skill {id: $skill_id})
+            OPTIONAL MATCH (s)-[:HAS_RESOURCE]->(r:Lesson)
+            RETURN collect({
+              title: r.title,
+              content: r.content,
+              url: r.url,
+              type: 'lesson'
+            }) AS resources
+        """, skill_id=skill_id)
+        
+        data = result.single()
+        resources = data["resources"] if data else []
+        # Filter out nulls
+        return [r for r in resources if r["title"]]
+    
+    def update_due_date(self, user: str, skill_id: str, correct: bool) -> dict:
+        """
+        Update the spaced repetition due date for a skill.
+        
+        SM-2 style intervals:
+        - If correct: increase interval (1, 3, 7, 14 days...)
+        - If wrong: reset to 1 day
+        
+        Args:
+            user: Username
+            skill_id: Skill ID
+            correct: Whether the last attempt was correct
+        
+        Returns:
+            dict with updated due_at
+        """
+        with self.driver.session() as session:
+            result = session.run("""
+                MATCH (u:User {name: $user})-[r:HAS_PROGRESS]->(s:Skill {id: $skill_id})
+                
+                // Calculate new interval
+                SET r.due_at = CASE 
+                  WHEN $correct THEN
+                    CASE 
+                      WHEN r.interval IS NULL THEN datetime() + duration('P1D')
+                      WHEN r.interval = 1 THEN datetime() + duration('P3D')
+                      WHEN r.interval = 3 THEN datetime() + duration('P7D')
+                      WHEN r.interval = 7 THEN datetime() + duration('P14D')
+                      ELSE datetime() + duration('P30D')
+                    END,
+                  ELSE
+                    datetime() + duration('P1D')
+                END,
+                
+                r.interval = CASE 
+                  WHEN $correct THEN 
+                    CASE 
+                      WHEN r.interval IS NULL THEN 1
+                      WHEN r.interval = 1 THEN 3
+                      WHEN r.interval = 3 THEN 7
+                      WHEN r.interval = 7 THEN 14
+                      ELSE 30
+                    END
+                  ELSE
+                    1
+                END
+                
+                RETURN {
+                  skill_id: s.id,
+                  due_at: r.due_at,
+                  interval: r.interval
+                } AS spaced_review
+            """, user=user, skill_id=skill_id, correct=correct)
+            
+            data = result.single()
+            return data["spaced_review"] if data else {}
+    
     def get_dashboard(self, user: str) -> dict:
         """
         Get Julia's learning dashboard summary.
@@ -453,6 +659,68 @@ def track_misconceptions_to_neo4j(user: str,
     sync = Neo4jSync(uri=uri)
     try:
         return sync.track_misconceptions(user, skill_id, tags)
+    finally:
+        sync.close()
+
+
+def plan_next_skill_for_neo4j(user: str,
+                             uri: str = "bolt://localhost:7687") -> dict:
+    """
+    Get the next skill to present using adaptive routing logic.
+    
+    Priority:
+    1. Remediation jump (misconception detected ≥2 times)
+    2. Learning path (lowest-mastery unmastered skill, prerequisites satisfied)
+    3. Spaced review (oldest overdue mastered skill)
+    4. Completion (all skills mastered)
+    
+    Usage in Streamlit:
+        plan = plan_next_skill_for_neo4j("julia")
+        
+        if plan["next_skill_id"]:
+            st.info(f"🎯 {plan['next_skill_name']}")
+            st.caption(plan['reason'])
+            
+            if plan.get("suggested_resources"):
+                st.subheader("📚 Resources")
+                for resource in plan["suggested_resources"]:
+                    if resource.get("url"):
+                        st.link_button(resource["title"], resource["url"])
+                    else:
+                        st.write(f"**{resource['title']}**: {resource.get('content', '')}")
+        else:
+            st.success(plan['reason'])
+    """
+    sync = Neo4jSync(uri=uri)
+    try:
+        return sync.plan_next_skill(user)
+    finally:
+        sync.close()
+
+
+def update_spaced_review_for_neo4j(user: str,
+                                  skill_id: str,
+                                  correct: bool,
+                                  uri: str = "bolt://localhost:7687") -> dict:
+    """
+    Update the spaced repetition due date after an attempt.
+    
+    Uses SM-2 style intervals:
+    - Correct: 1d → 3d → 7d → 14d → 30d
+    - Wrong: always reset to 1d
+    
+    Usage in Streamlit:
+        # After grading and updating mastery
+        spaced = update_spaced_review_for_neo4j(
+            user="julia",
+            skill_id=item["skill_id"],
+            correct=correct
+        )
+        # spaced["due_at"] is when to show this skill again
+    """
+    sync = Neo4jSync(uri=uri)
+    try:
+        return sync.update_due_date(user, skill_id, correct)
     finally:
         sync.close()
 
