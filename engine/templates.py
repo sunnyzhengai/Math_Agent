@@ -134,7 +134,11 @@ def gen_factor_a1(difficulty="med"):
     stem = f"Factor: {_format_poly(1, b, c)}"
     correct = _format_factored(f"(x + {sp})(x + {sq})".replace("+ -","- "))
     # distractors
-    d1 = _format_factored(f"(x + {p})(x + {q})".replace("+ -","- "))  # ignores signs
+    # d1: common student error - swap the p and q (works when p != q)
+    # but if p == q, use p+1 instead to ensure it's different
+    d1_p = sp if sp != sq else sp + 1
+    d1_q = sq + 1 if sp != sq else sq
+    d1 = _format_factored(f"(x + {d1_p})(x + {d1_q})".replace("+ -","- "))
     # d2: flip the sign of one factor (not both)
     flipped_sq = -sq
     d2_str = f"(x + {sp})(x + {flipped_sq})"
