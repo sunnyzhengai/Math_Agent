@@ -15,13 +15,13 @@
     {
       "id": "quad.factor.a1",
       "name": "Factor a=1 (Legacy)",
-      "prereqs": ["quad.identify"],
+      "prereqs": ["quad.identify", "quad.vertex.form"],
       "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {
       "id": "quad.discriminant",
       "name": "Discriminant (Legacy)",
-      "prereqs": ["quad.identify"],
+      "prereqs": ["quad.identify", "quad.vertex.form"],
       "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
     },
     {

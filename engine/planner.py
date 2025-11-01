@@ -62,11 +62,6 @@ def next_skill(state:dict):
     
     for s in SKILL_LIST:
         sid = s["id"]
-        
-        # If this is the skill we just rotated to, keep practicing it!
-        if sid == last_selected:
-            return sid  # ← RETURN IT, don't skip!
-        
         st = state.get("skills", {}).get(sid, {})
         streak = st.get("correct_streak", 0)
         
@@ -74,11 +69,18 @@ def next_skill(state:dict):
             # This skill has 3 correct answers! Find a skill that has this as a prerequisite
             for next_skill_candidate in SKILL_LIST:
                 next_sid = next_skill_candidate["id"]
+                
+                # Skip if this is the last_selected skill (don't rotate to the same skill)
+                if next_sid == last_selected:
+                    continue
+                
                 # Skip if already mastered
                 if mastered(state, next_sid):
                     continue
+                
                 # Check if current skill is a prerequisite for next skill
                 if sid in next_skill_candidate.get("prereqs", []):
+                    
                     # Reset streak on this skill so we don't keep rotating
                     if sid not in state.get("skills", {}):
                         state["skills"][sid] = {}
