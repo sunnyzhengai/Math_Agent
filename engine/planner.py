@@ -63,10 +63,9 @@ def next_skill(state:dict):
     for s in SKILL_LIST:
         sid = s["id"]
         
-        # Don't immediately rotate from the skill we just selected
-        # (unless it's been several questions)
+        # If this is the skill we just rotated to, keep practicing it!
         if sid == last_selected:
-            continue
+            return sid  # ← RETURN IT, don't skip!
         
         st = state.get("skills", {}).get(sid, {})
         streak = st.get("correct_streak", 0)
