@@ -58,8 +58,16 @@ def next_skill(state:dict):
     import random
     
     # Check if any skill has 3+ correct streak → rotate to next skill in prerequisites
+    last_selected = state.get("last_selected_skill")  # Track previous selection to prevent ping-ponging
+    
     for s in SKILL_LIST:
         sid = s["id"]
+        
+        # Don't immediately rotate from the skill we just selected
+        # (unless it's been several questions)
+        if sid == last_selected:
+            continue
+        
         st = state.get("skills", {}).get(sid, {})
         streak = st.get("correct_streak", 0)
         
@@ -72,8 +80,9 @@ def next_skill(state:dict):
                     continue
                 # Check if current skill is a prerequisite for next skill
                 if sid in next_skill_candidate.get("prereqs", []):
-                    # IMPORTANT: Reset streak on this skill so we don't keep rotating
+                    # Reset streak on this skill so we don't keep rotating
                     state["skills"][sid]["correct_streak"] = 0
+                    state["last_selected_skill"] = next_sid  # Track that we selected this
                     return next_sid
     
     # remediation check across recent skill
