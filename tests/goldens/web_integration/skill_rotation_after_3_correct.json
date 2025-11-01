@@ -1,0 +1,32 @@
+{
+  "name": "skill_rotation_after_3_correct",
+  "description": "After 3 consecutive correct answers on a skill, move to next skill in prerequisites",
+  "scenario": [
+    {
+      "step": 1,
+      "action": "answer_correct_on_quad_identify",
+      "streak": 1,
+      "expected_next_skill": "quad.identify",
+      "reason": "streak=1, need 3 to rotate"
+    },
+    {
+      "step": 2,
+      "action": "answer_correct_on_quad_identify",
+      "streak": 2,
+      "expected_next_skill": "quad.identify",
+      "reason": "streak=2, need 3 to rotate"
+    },
+    {
+      "step": 3,
+      "action": "answer_correct_on_quad_identify",
+      "streak": 3,
+      "expected_next_skill": "quad.vertex.form",
+      "reason": "streak=3, rotate to next prereq skill"
+    }
+  ],
+  "assertions": [
+    "After 3 correct answers on quad.identify, planner returns quad.vertex.form",
+    "Streak counter is reset when skill changes",
+    "User doesn't get stuck answering same skill repeatedly"
+  ]
+}

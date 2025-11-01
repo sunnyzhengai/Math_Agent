@@ -49,12 +49,30 @@ def _remediation_for_tags(tag_counts:dict):
 def next_skill(state:dict):
     """
     Pick the next skill based on:
-    1) remediation need (tag repeated)
-    2) otherwise, skill with p_mastery closest to 0.5 (entropy-based selection)
-    3) respect prerequisites
-    4) randomize when multiple candidates are equally good
+    1) Check if current skill has 3+ correct streak → move to next skill in prerequisites
+    2) remediation need (tag repeated)
+    3) otherwise, skill with p_mastery closest to 0.5 (entropy-based selection)
+    4) respect prerequisites
+    5) randomize when multiple candidates are equally good
     """
     import random
+    
+    # Check if any skill has 3+ correct streak → rotate to next skill in prerequisites
+    for s in SKILL_LIST:
+        sid = s["id"]
+        st = state.get("skills", {}).get(sid, {})
+        streak = st.get("correct_streak", 0)
+        
+        if streak >= 3:
+            # This skill has 3 correct answers! Find a skill that has this as a prerequisite
+            for next_skill_candidate in SKILL_LIST:
+                next_sid = next_skill_candidate["id"]
+                # Skip if already mastered
+                if mastered(state, next_sid):
+                    continue
+                # Check if current skill is a prerequisite for next skill
+                if sid in next_skill_candidate.get("prereqs", []):
+                    return next_sid
     
     # remediation check across recent skill
     # find the skill with any tag >=2 that is not yet mastered

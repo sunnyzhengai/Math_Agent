@@ -1,0 +1,12 @@
+{
+  "username": "fresh_test",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.52,
+      "attempts": 2,
+      "last_attempt": "2025-11-01T01:16:41.905396",
+      "correct_count": 1
+    }
+  },
+  "history": []
+}

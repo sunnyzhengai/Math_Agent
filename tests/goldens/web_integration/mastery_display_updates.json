@@ -1,0 +1,45 @@
+{
+  "name": "mastery_display_updates_after_attempt",
+  "description": "Mastery % on dashboard should reflect current state, not frozen",
+  "scenario": [
+    {
+      "step": 1,
+      "action": "generate_item",
+      "user_id": "test_mastery_001",
+      "params": {
+        "seed": 42
+      },
+      "expected": {
+        "skill_id": "quad.identify",
+        "learner_mastery_before": 0.6
+      }
+    },
+    {
+      "step": 2,
+      "action": "grade_response",
+      "params": {
+        "user_id": "test_mastery_001",
+        "selected_choice_id": "a",
+        "is_correct": true
+      },
+      "expected": {
+        "correct": true,
+        "p_mastery_after": 0.65
+      }
+    },
+    {
+      "step": 3,
+      "action": "get_progress",
+      "user_id": "test_mastery_001",
+      "expected": {
+        "skills": [
+          {
+            "skill_id": "quad.identify",
+            "p_mastery": 0.65
+          }
+        ]
+      },
+      "assertion": "p_mastery is 0.65 (reflects the +0.05 update), not stuck at 0.6"
+    }
+  ]
+}
