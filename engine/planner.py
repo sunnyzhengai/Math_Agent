@@ -209,6 +209,9 @@ def generate_adaptive_item(skill_id: str, state: dict, seed: Optional[int] = Non
     # Generate item with selected difficulty (pass seed for reproducibility)
     item = templates.generate_item(skill_id, difficulty, seed=seed)
     
+    # Ensure item has the correct skill_id (generators may hard-code internal IDs)
+    item["skill_id"] = skill_id
+    
     # Store the difficulty in item metadata for logging
     item["adaptive_difficulty"] = difficulty
     item["learner_mastery"] = p_mastery

@@ -1,0 +1,19 @@
+{
+  "username": "test_backend",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.75,
+      "attempts": 3,
+      "correct_streak": 0
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    }
+  },
+  "last_selected_skill": "quad.vertex.form"
+}
