@@ -1,0 +1,21 @@
+{
+  "username": "trace_cycle_v2",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.65,
+      "attempts": 3,
+      "correct_streak": 0,
+      "correct_count": 3
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    }
+  },
+  "history": [],
+  "last_selected_skill": "quad.vertex.form"
+}

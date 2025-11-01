@@ -1,0 +1,222 @@
+{
+  "username": "STATE_TEST_1761962746",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.factor.a1": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.discriminant": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.formula": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.form.identify.standard": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.form.identify.vertex": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.form.identify.factored": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.convert.vertex_to_standard": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.convert.factor.simple": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.convert.factor.complex": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.convert.expand": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.convert.complete_square": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.convert.standard_to_vertex": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.solve.by_factoring": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.solve.by_completing_square": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.solve.by_formula": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.solve.discriminant": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.solve.by_graphing": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.graph.sketch": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.graph.vertex": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.graph.axis": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.graph.direction": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.graph.intercepts": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.model.optimize": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.model.projectile": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    },
+    "quad.model.story": {
+      "p_mastery": 0.6,
+      "seen": 0,
+      "correct": 0,
+      "streak": 0,
+      "attempts": 0,
+      "tag_counts": {}
+    }
+  },
+  "history": []
+}
