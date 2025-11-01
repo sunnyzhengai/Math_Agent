@@ -1,0 +1,39 @@
+{
+  "name": "mastery_updates_realtime",
+  "description": "Mastery percentage should update in real-time on dashboard, not stuck",
+  "scenario": [
+    {
+      "action": "generate_item",
+      "user_id": "mastery_test",
+      "expected_mastery_before": 0.6,
+      "note": "Initial mastery for new skill"
+    },
+    {
+      "action": "grade_correct",
+      "expected_mastery_after": 0.65,
+      "note": "+0.05 for correct answer"
+    },
+    {
+      "action": "get_progress",
+      "check_field": "skills[0].p_mastery",
+      "expected_value": 0.65,
+      "note": "Should be 0.65, NOT stuck at 0.6"
+    },
+    {
+      "action": "grade_wrong",
+      "expected_mastery_after": 0.62,
+      "note": "-0.03 for wrong answer"
+    },
+    {
+      "action": "get_progress",
+      "check_field": "skills[0].p_mastery",
+      "expected_value": 0.62,
+      "note": "Should reflect current state, not historical"
+    }
+  ],
+  "critical_assertions": [
+    "Mastery updates +0.05 on correct, -0.03 on wrong",
+    "Dashboard shows current p_mastery from state, not frozen value",
+    "Multiple submissions should show cumulative updates"
+  ]
+}

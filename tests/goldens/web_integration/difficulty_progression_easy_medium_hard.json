@@ -1,0 +1,45 @@
+{
+  "name": "difficulty_progression_easy_medium_hard",
+  "description": "Difficulty should follow progression: [easy, easy, medium, medium, hard, hard, hard]",
+  "scenario": [
+    {
+      "skill": "quad.identify",
+      "progression_array": ["easy", "easy", "medium", "medium", "hard", "hard", "hard"],
+      "questions": [
+        {
+          "attempt": 1,
+          "expected_difficulty": "easy",
+          "answer": "correct"
+        },
+        {
+          "attempt": 2,
+          "expected_difficulty": "easy",
+          "answer": "correct"
+        },
+        {
+          "attempt": 3,
+          "expected_difficulty": "medium",
+          "answer": "wrong",
+          "note": "Wrong answer, should stay at attempt 3 (not increment to 4)"
+        },
+        {
+          "attempt": 4,
+          "expected_difficulty": "medium",
+          "answer": "correct",
+          "note": "Back to medium, then moves forward"
+        },
+        {
+          "attempt": 5,
+          "expected_difficulty": "hard",
+          "answer": "correct"
+        }
+      ]
+    }
+  ],
+  "critical_assertions": [
+    "Progression array determines difficulty, not random",
+    "Wrong answer keeps progression index same (fallback effect)",
+    "Correct answer advances progression index",
+    "No random jumps between easy/hard"
+  ]
+}

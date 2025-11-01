@@ -1,0 +1,84 @@
+{
+  "name": "skill_rotation_complete_sequence",
+  "description": "Complete sequence: 3 questions per skill, rotating after each set of 3 correct answers",
+  "scenario": [
+    {
+      "questions": [
+        {
+          "num": 1,
+          "expected_skill": "quad.identify",
+          "answer": "correct",
+          "streak_after": 1
+        },
+        {
+          "num": 2,
+          "expected_skill": "quad.identify",
+          "answer": "correct",
+          "streak_after": 2
+        },
+        {
+          "num": 3,
+          "expected_skill": "quad.identify",
+          "answer": "correct",
+          "streak_after": 3
+        }
+      ],
+      "assertion": "After 3 correct on quad.identify, streak should be 3"
+    },
+    {
+      "questions": [
+        {
+          "num": 4,
+          "expected_skill": "quad.vertex.form",
+          "answer": "correct",
+          "streak_after": 1,
+          "note": "Rotated to next skill, streak resets to 1"
+        },
+        {
+          "num": 5,
+          "expected_skill": "quad.vertex.form",
+          "answer": "correct",
+          "streak_after": 2
+        },
+        {
+          "num": 6,
+          "expected_skill": "quad.vertex.form",
+          "answer": "correct",
+          "streak_after": 3
+        }
+      ],
+      "assertion": "After 3 correct on quad.vertex.form, should rotate away"
+    },
+    {
+      "questions": [
+        {
+          "num": 7,
+          "expected_skill": "quad.factor.a1",
+          "answer": "correct",
+          "streak_after": 1,
+          "note": "Rotated to next skill with quad.vertex.form as prereq"
+        },
+        {
+          "num": 8,
+          "expected_skill": "quad.factor.a1",
+          "answer": "correct",
+          "streak_after": 2
+        },
+        {
+          "num": 9,
+          "expected_skill": "quad.factor.a1",
+          "answer": "correct",
+          "streak_after": 3
+        }
+      ],
+      "assertion": "Pattern continues: 3 per skill"
+    }
+  ],
+  "critical_assertions": [
+    "Questions 1-3: All quad.identify",
+    "Questions 4-6: All quad.vertex.form (NOT ping-ponging back to quad.identify)",
+    "Questions 7-9: All quad.factor.a1 (or another prereq)",
+    "Each skill should have exactly 3 questions before rotation",
+    "NO ping-ponging between skills"
+  ]
+}
