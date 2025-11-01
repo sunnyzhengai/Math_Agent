@@ -74,10 +74,6 @@ def next_skill(state:dict):
                 if next_sid == last_selected:
                     continue
                 
-                # Skip if already mastered
-                if mastered(state, next_sid):
-                    continue
-                
                 # Check if current skill is a prerequisite for next skill
                 if sid in next_skill_candidate.get("prereqs", []):
                     
