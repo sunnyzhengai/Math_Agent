@@ -81,6 +81,8 @@ def next_skill(state:dict):
                 # Check if current skill is a prerequisite for next skill
                 if sid in next_skill_candidate.get("prereqs", []):
                     # Reset streak on this skill so we don't keep rotating
+                    if sid not in state.get("skills", {}):
+                        state["skills"][sid] = {}
                     state["skills"][sid]["correct_streak"] = 0
                     state["last_selected_skill"] = next_sid  # Track that we selected this
                     return next_sid

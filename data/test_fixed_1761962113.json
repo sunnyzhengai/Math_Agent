@@ -1,0 +1,20 @@
+{
+  "username": "test_fixed_1761962113",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.8000000000000003,
+      "attempts": 6,
+      "correct_streak": 3,
+      "last_attempt": "2025-11-01T01:55:13.426964",
+      "correct_count": 6
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.9000000000000004,
+      "attempts": 8,
+      "correct_streak": 8,
+      "last_attempt": "2025-11-01T01:55:13.498826",
+      "correct_count": 8
+    }
+  },
+  "history": []
+}
