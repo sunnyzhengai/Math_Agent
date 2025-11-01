@@ -53,32 +53,32 @@
       "questions": [
         {
           "num": 7,
-          "expected_skill": "quad.factor.a1",
+          "expected_skill": "quad.vertex.form",
           "answer": "correct",
-          "streak_after": 1,
-          "note": "Rotated to next skill with quad.vertex.form as prereq"
+          "streak_after": 4,
+          "note": "Continues on quad.vertex.form - quad.factor.a1 requires p_mastery >= 0.9 for prerequisites"
         },
         {
           "num": 8,
-          "expected_skill": "quad.factor.a1",
+          "expected_skill": "quad.vertex.form",
           "answer": "correct",
-          "streak_after": 2
+          "streak_after": 5
         },
         {
           "num": 9,
-          "expected_skill": "quad.factor.a1",
+          "expected_skill": "quad.vertex.form",
           "answer": "correct",
-          "streak_after": 3
+          "streak_after": 6
         }
       ],
-      "assertion": "Pattern continues: 3 per skill"
+      "assertion": "Rotation requires both correct_streak >= 3 AND prerequisite mastery >= 0.9"
     }
   ],
   "critical_assertions": [
-    "Questions 1-3: All quad.identify",
-    "Questions 4-6: All quad.vertex.form (NOT ping-ponging back to quad.identify)",
-    "Questions 7-9: All quad.factor.a1 (or another prereq)",
-    "Each skill should have exactly 3 questions before rotation",
+    "Questions 1-3: All quad.identify (3 consecutive correct = rotation trigger)",
+    "Questions 4-6: All quad.vertex.form (rotated successfully)",
+    "Questions 7-9: quad.vertex.form continues (no rotation until p_mastery >= 0.9)",
+    "Rotation requires BOTH: correct_streak >= 3 AND prerequisite mastery >= 0.9",
     "NO ping-ponging between skills"
   ]
 }
