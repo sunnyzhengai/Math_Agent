@@ -3,9 +3,10 @@
   "skills": {
     "quad.identify": {
       "p_mastery": 1.0,
-      "attempts": 12,
-      "last_attempt": "2025-11-01T01:19:06.576370",
-      "correct_count": 12
+      "attempts": 23,
+      "correct_streak": 11,
+      "last_attempt": "2025-11-01T01:46:24.420660",
+      "correct_count": 23
     }
   },
   "history": []

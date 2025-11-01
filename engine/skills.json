@@ -1,6 +1,36 @@
 {
   "skills": [
     {
+      "id": "quad.identify",
+      "name": "Identify Quadratic (Legacy)",
+      "prereqs": [],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard", "hard"]
+    },
+    {
+      "id": "quad.vertex.form",
+      "name": "Vertex Form (Legacy)",
+      "prereqs": ["quad.identify"],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard", "hard"]
+    },
+    {
+      "id": "quad.factor.a1",
+      "name": "Factor a=1 (Legacy)",
+      "prereqs": ["quad.identify"],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
+    },
+    {
+      "id": "quad.discriminant",
+      "name": "Discriminant (Legacy)",
+      "prereqs": ["quad.identify"],
+      "progression": ["easy", "easy", "medium", "medium", "hard", "hard"]
+    },
+    {
+      "id": "quad.formula",
+      "name": "Quadratic Formula (Legacy)",
+      "prereqs": ["quad.identify"],
+      "progression": ["easy", "easy", "medium", "medium", "hard"]
+    },
+    {
       "id": "quad.form.identify.standard",
       "name": "Identify standard form",
       "prereqs": [],
