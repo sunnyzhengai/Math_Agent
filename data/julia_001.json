@@ -2,11 +2,18 @@
   "username": "julia_001",
   "skills": {
     "quad.identify": {
-      "p_mastery": 1.0,
-      "attempts": 23,
-      "correct_streak": 11,
-      "last_attempt": "2025-11-01T01:46:24.420660",
-      "correct_count": 23
+      "p_mastery": 0.6500000000000001,
+      "attempts": 3,
+      "correct_streak": 3,
+      "last_attempt": "2025-11-01T01:49:31.033071",
+      "correct_count": 3
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.8000000000000003,
+      "attempts": 6,
+      "correct_streak": 6,
+      "last_attempt": "2025-11-01T01:51:17.252986",
+      "correct_count": 6
     }
   },
   "history": []

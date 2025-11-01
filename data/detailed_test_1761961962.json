@@ -1,0 +1,20 @@
+{
+  "username": "detailed_test_1761961962",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.6500000000000001,
+      "attempts": 3,
+      "correct_streak": 3,
+      "last_attempt": "2025-11-01T01:52:42.617954",
+      "correct_count": 3
+    },
+    "quad.vertex.form": {
+      "p_mastery": 0.8500000000000003,
+      "attempts": 7,
+      "correct_streak": 7,
+      "last_attempt": "2025-11-01T01:52:42.993647",
+      "correct_count": 7
+    }
+  },
+  "history": []
+}

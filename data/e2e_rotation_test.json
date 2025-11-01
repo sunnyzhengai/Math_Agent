@@ -1,0 +1,13 @@
+{
+  "username": "e2e_rotation_test",
+  "skills": {
+    "quad.identify": {
+      "p_mastery": 0.6500000000000001,
+      "attempts": 3,
+      "correct_streak": 3,
+      "last_attempt": "2025-11-01T01:48:47.206229",
+      "correct_count": 3
+    }
+  },
+  "history": []
+}
