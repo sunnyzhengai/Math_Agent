@@ -40,10 +40,10 @@ def update_after_answer(state:dict, skill_id:str, correct:bool, tags:list, delta
     s["attempts"] = s.get("attempts", 0) + 1  # Increment question count
     if correct:
         s["correct"] += 1
-        s["streak"] += 1
+        s["correct_streak"] = s.get("correct_streak", 0) + 1
         s["p_mastery"] = max(0.0, min(1.0, s["p_mastery"] + delta_win * difficulty_weight))
     else:
-        s["streak"] = 0
+        s["correct_streak"] = 0
         s["p_mastery"] = max(0.0, min(1.0, s["p_mastery"] - delta_loss * difficulty_weight))
     # tags
     counts = s.setdefault("tag_counts", {})
@@ -52,4 +52,4 @@ def update_after_answer(state:dict, skill_id:str, correct:bool, tags:list, delta
 
 def mastered(state:dict, skill_id:str):
     s = ensure_skill(state, skill_id)
-    return s["p_mastery"] >= 0.9 and s["streak"] >= 3
+    return s["p_mastery"] >= 0.9 and s.get("correct_streak", 0) >= 3
